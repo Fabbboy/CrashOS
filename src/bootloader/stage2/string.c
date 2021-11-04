@@ -1,16 +1,17 @@
 #include "string.h"
-#include "stdint.h"
+#include <stdint.h>
+#include <stddef.h>
 
 const char* strchr(const char* str, char chr)
 {
-    if(str == NULL)
+    if (str == NULL)
         return NULL;
 
-    while(*str)
+    while (*str)
     {
-        if(*str == chr)
+        if (*str == chr)
             return str;
-        
+
         ++str;
     }
 
@@ -21,10 +22,10 @@ char* strcpy(char* dst, const char* src)
 {
     char* origDst = dst;
 
-    if(dst == NULL)
+    if (dst == NULL)
         return NULL;
 
-    if(src == NULL)
+    if (src == NULL)
     {
         *dst = '\0';
         return dst;

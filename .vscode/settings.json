@@ -3,7 +3,8 @@
         "ctype.h": "c",
         "string.h": "c",
         "stdint.h": "c",
-        "disk.h": "c"
+        "disk.h": "c",
+        "*.def": "cpp"
     },
     "git.ignoreLimitWarning": true
 }

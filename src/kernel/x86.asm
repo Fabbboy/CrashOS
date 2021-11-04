@@ -1,3 +1,4 @@
+
 global x86_outb
 x86_outb:
     [bits 32]

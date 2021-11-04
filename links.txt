@@ -1,0 +1,7 @@
+OSDev Wiki:
+https://wiki.osdev.org
+
+Keyboard Driver: 
+https://dev.to/frosnerd/writing-my-own-keyboard-driver-16kh
+https://github.com/FRosner/FrOS
+

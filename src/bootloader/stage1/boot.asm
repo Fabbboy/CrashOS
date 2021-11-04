@@ -16,9 +16,9 @@ bdb_bytes_per_sector:       dw 512
 bdb_sectors_per_cluster:    db 1
 bdb_reserved_sectors:       dw 1
 bdb_fat_count:              db 2
-bdb_dir_entries_count:      dw 0E0h
+bdb_dir_entries_count:      dw 0x0E0
 bdb_total_sectors:          dw 2880                 ; 2880 * 512 = 1.44MB
-bdb_media_descriptor_type:  db 0F0h                 ; F0 = 3.5" floppy disk
+bdb_media_descriptor_type:  db 0x0F0                 ; F0 = 3.5" floppy disk
 bdb_sectors_per_fat:        dw 9                    ; 9 sectors/fat
 bdb_sectors_per_track:      dw 18
 bdb_heads:                  dw 2
@@ -28,8 +28,8 @@ bdb_large_sector_count:     dd 0
 ; extended boot record
 ebr_drive_number:           db 0                    ; 0x00 floppy, 0x80 hdd, useless
                             db 0                    ; reserved
-ebr_signature:              db 29h
-ebr_volume_id:              db 12h, 34h, 56h, 78h   ; serial number, value doesn't matter
+ebr_signature:              db 0x29
+ebr_volume_id:              db 0x12, 0x34, 0x56, 0x78   ; serial number, value doesn't matter
 ebr_volume_label:           db 'NANOBYTE OS'        ; 11 bytes, padded with spaces
 ebr_system_id:              db 'FAT12   '           ; 8 bytes
 
@@ -66,7 +66,7 @@ start:
     ; read drive parameters (sectors per track and head count),
     ; instead of relying on data on formatted disk
     push es
-    mov ah, 08h
+    mov ah, 0x08
     int 13h
     jc floppy_error
     pop es
@@ -315,13 +315,13 @@ disk_read:
     call lba_to_chs                     ; compute CHS
     pop ax                              ; AL = number of sectors to read
     
-    mov ah, 02h
+    mov ah, 0x02
     mov di, 3                           ; retry count
 
 .retry:
     pusha                               ; save all registers, we don't know what bios modifies
     stc                                 ; set carry flag, some BIOS'es don't set it
-    int 13h                             ; carry flag cleared = success
+    int 0x13                             ; carry flag cleared = success
     jnc .done                           ; jump if carry not set
 
     ; read failed

@@ -1,6 +1,6 @@
 %macro x86_EnterRealMode 0
     [bits 32]
-    jmp word 18h:.pmode16         ; 1 - jump to 16-bit protected mode segment
+    jmp word 0x18:.pmode16         ; 1 - jump to 16-bit protected mode segment
 
 .pmode16:
     [bits 16]
@@ -10,7 +10,7 @@
     mov cr0, eax
 
     ; 3 - jump to real mode
-    jmp word 00h:.rmode
+    jmp word 0x00:.rmode
 
 .rmode:
     ; 4 - setup segments
@@ -33,7 +33,7 @@
     mov cr0, eax
 
     ; 5 - far jump into protected mode
-    jmp dword 08h:.pmode
+    jmp dword 0x08:.pmode
 
 
 .pmode:
@@ -175,7 +175,7 @@ x86_Disk_Reset:
     mov ah, 0
     mov dl, [bp + 8]    ; dl - drive
     stc
-    int 13h
+    int 0x13
 
     mov eax, 1
     sbb eax, 0           ; 1 on success, 0 on fail   
@@ -213,7 +213,7 @@ x86_Disk_Read:
     shl cl, 6
     
     mov al, [bp + 16]    ; cl - sector to bits 0-5
-    and al, 3Fh
+    and al, 0x3F
     or cl, al
 
     mov dh, [bp + 20]   ; dh - head
@@ -223,9 +223,9 @@ x86_Disk_Read:
     LinearToSegOffset [bp + 28], es, ebx, bx
 
     ; call int13h
-    mov ah, 02h
+    mov ah, 0x02
     stc
-    int 13h
+    int 0x13
 
     ; set return value
     mov eax, 1

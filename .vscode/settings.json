@@ -1,0 +1,9 @@
+{
+    "files.associations": {
+        "ctype.h": "c",
+        "string.h": "c",
+        "stdint.h": "c",
+        "disk.h": "c"
+    },
+    "git.ignoreLimitWarning": true
+}

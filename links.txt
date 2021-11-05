@@ -5,3 +5,6 @@ Keyboard Driver:
 https://dev.to/frosnerd/writing-my-own-keyboard-driver-16kh
 https://github.com/FRosner/FrOS
 
+IDT:
+https://0xax.gitbooks.io/linux-insides/content/KernelStructures/linux-kernelstructure-1.html
+https://en.wikipedia.org/wiki/Interrupt_descriptor_table#Protected_and_long_mode

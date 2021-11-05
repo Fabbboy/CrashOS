@@ -109,6 +109,59 @@ void putc(char c)
     setcursor(g_ScreenX, g_ScreenY);
 }
 
+int lastchrx(int line)
+{
+    int res = SCREEN_WIDTH;
+
+    while(getchr(res, line) == '\0' && res >= 0)
+        res--;
+
+    return res;
+}
+
+void rmchr(int x, int y)
+{
+    g_ScreenBuffer[2 * (y * SCREEN_WIDTH + x)] = '\0';
+}
+
+void rmcolor(int x, int y)
+{
+    g_ScreenBuffer[2 * (y * SCREEN_WIDTH + x) + 1] = DEFAULT_COLOR;
+}
+
+void rmchrs(uint32_t amount)
+{
+    for(int i = 0; i < amount; i++)
+    {
+        g_ScreenX--;
+        if(g_ScreenX < 0)
+        {
+            g_ScreenY--;
+            g_ScreenX = lastchrx(g_ScreenY) + 1;
+        }
+
+        rmchr(g_ScreenX, g_ScreenY);
+        rmcolor(g_ScreenX, g_ScreenY);
+    }
+    
+    setcursor(g_ScreenX, g_ScreenY);
+}
+
+void rmline(int line)
+{
+    for(int i = SCREEN_WIDTH; i >= 0; i--)
+        putchr(i, line, '\0');
+}
+
+void rmlastline()
+{
+    rmline(g_ScreenY);
+    g_ScreenY--;
+    g_ScreenX = lastchrx(g_ScreenY) + 1;
+
+    setcursor(g_ScreenX, g_ScreenY);
+}
+
 void puts(const char* str)
 {
     while(*str)

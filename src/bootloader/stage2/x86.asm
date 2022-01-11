@@ -1,6 +1,6 @@
 %macro x86_EnterRealMode 0
     [bits 32]
-    jmp word 0x18:.pmode16         ; 1 - jump to 16-bit protected mode segment
+    jmp word 18h:.pmode16         ; 1 - jump to 16-bit protected mode segment
 
 .pmode16:
     [bits 16]
@@ -10,7 +10,7 @@
     mov cr0, eax
 
     ; 3 - jump to real mode
-    jmp word 0x00:.rmode
+    jmp word 00h:.rmode
 
 .rmode:
     ; 4 - setup segments
@@ -33,13 +33,13 @@
     mov cr0, eax
 
     ; 5 - far jump into protected mode
-    jmp dword 0x08:.pmode
+    jmp dword 08h:.pmode
 
 
 .pmode:
     ; we are now in protected mode!
     [bits 32]
-    
+
     ; 6 - setup segment registers
     mov ax, 0x10
     mov ds, ax
@@ -114,7 +114,7 @@ x86_Disk_GetDriveParams:
 
     ; drive type from bl
     LinearToSegOffset [bp + 12], es, esi, si
-    mov es:[si], bl
+    mov [es:si], bl
 
     ; cylinders
     mov bl, ch          ; cylinders - lower bits in ch
@@ -123,21 +123,21 @@ x86_Disk_GetDriveParams:
     inc bx
 
     LinearToSegOffset [bp + 16], es, esi, si
-    mov es:[si], bx
+    mov [es:si], bx
 
     ; sectors
     xor ch, ch          ; sectors - lower 5 bits in cl
     and cl, 3Fh
-    
+
     LinearToSegOffset [bp + 20], es, esi, si
-    mov es:[si], cx
+    mov [es:si], cx
 
     ; heads
     mov cl, dh          ; heads - dh
     inc cx
 
     LinearToSegOffset [bp + 24], es, esi, si
-    mov es:[si], cx
+    mov [es:si], cx
 
     ; restore regs
     pop di
@@ -175,10 +175,10 @@ x86_Disk_Reset:
     mov ah, 0
     mov dl, [bp + 8]    ; dl - drive
     stc
-    int 0x13
+    int 13h
 
     mov eax, 1
-    sbb eax, 0           ; 1 on success, 0 on fail   
+    sbb eax, 0           ; 1 on success, 0 on fail
 
     push eax
 
@@ -211,9 +211,9 @@ x86_Disk_Read:
     mov ch, [bp + 12]    ; ch - cylinder (lower 8 bits)
     mov cl, [bp + 13]    ; cl - cylinder to bits 6-7
     shl cl, 6
-    
+
     mov al, [bp + 16]    ; cl - sector to bits 0-5
-    and al, 0x3F
+    and al, 3Fh
     or cl, al
 
     mov dh, [bp + 20]   ; dh - head
@@ -223,9 +223,9 @@ x86_Disk_Read:
     LinearToSegOffset [bp + 28], es, ebx, bx
 
     ; call int13h
-    mov ah, 0x02
+    mov ah, 02h
     stc
-    int 0x13
+    int 13h
 
     ; set return value
     mov eax, 1

@@ -11,27 +11,27 @@ const uint8_t DEFAULT_COLOR = 0x7;
 uint8_t* g_ScreenBuffer = (uint8_t*)0xB8000;
 int g_ScreenX = 0, g_ScreenY = 0;
 
-void putchr(int x, int y, char c)
+void put_chr(int x, int y, char c)
 {
     g_ScreenBuffer[2 * (y * SCREEN_WIDTH + x)] = c;
 }
 
-void putcolor(int x, int y, uint8_t color)
+void put_color(int x, int y, uint8_t color)
 {
     g_ScreenBuffer[2 * (y * SCREEN_WIDTH + x) + 1] = color;
 }
 
-char getchr(int x, int y)
+char get_chr(int x, int y)
 {
     return g_ScreenBuffer[2 * (y * SCREEN_WIDTH + x)];
 }
 
-uint8_t getcolor(int x, int y)
+uint8_t get_color(int x, int y)
 {
     return g_ScreenBuffer[2 * (y * SCREEN_WIDTH + x) + 1];
 }
 
-void setcursor(int x, int y)
+void set_cursor(int x, int y)
 {
     int pos = y * SCREEN_WIDTH + x;
 
@@ -41,18 +41,18 @@ void setcursor(int x, int y)
     x86_outb(0x3D5, (uint8_t)((pos >> 8) & 0xFF));
 }
 
-void clrscr()
+void clear_screen()
 {
     for (int y = 0; y < SCREEN_HEIGHT; y++)
         for (int x = 0; x < SCREEN_WIDTH; x++)
         {
-            putchr(x, y, '\0');
-            putcolor(x, y, DEFAULT_COLOR);
+            put_chr(x, y, '\0');
+            put_color(x, y, DEFAULT_COLOR);
         }
 
     g_ScreenX = 0;
     g_ScreenY = 0;
-    setcursor(g_ScreenX, g_ScreenY);
+    set_cursor(g_ScreenX, g_ScreenY);
 }
 
 void scrollback(int lines)
@@ -60,15 +60,15 @@ void scrollback(int lines)
     for (int y = lines; y < SCREEN_HEIGHT; y++)
         for (int x = 0; x < SCREEN_WIDTH; x++)
         {
-            putchr(x, y - lines, getchr(x, y));
-            putcolor(x, y - lines, getcolor(x, y));
+            put_chr(x, y - lines, get_chr(x, y));
+            put_color(x, y - lines, get_color(x, y));
         }
 
     for (int y = SCREEN_HEIGHT - lines; y < SCREEN_HEIGHT; y++)
         for (int x = 0; x < SCREEN_WIDTH; x++)
         {
-            putchr(x, y, '\0');
-            putcolor(x, y, DEFAULT_COLOR);
+            put_chr(x, y, '\0');
+            put_color(x, y, DEFAULT_COLOR);
         }
 
     g_ScreenY -= lines;
@@ -93,7 +93,7 @@ void putc(char c)
             break;
 
         default:
-            putchr(g_ScreenX, g_ScreenY, c);
+            put_chr(g_ScreenX, g_ScreenY, c);
             g_ScreenX++;
             break;
     }
@@ -106,7 +106,7 @@ void putc(char c)
     if (g_ScreenY >= SCREEN_HEIGHT)
         scrollback(1);
 
-    setcursor(g_ScreenX, g_ScreenY);
+    set_cursor(g_ScreenX, g_ScreenY);
 }
 
 void puts(const char* str)
@@ -299,7 +299,7 @@ void printf(const char* fmt, ...)
     va_end(args);
 }
 
-void print_buffer(const char* msg, const void* buffer, uint32_t count)
+__attribute__((unused)) void print_buffer(const char* msg, const void* buffer, uint32_t count)
 {
     const uint8_t* u8Buffer = (const uint8_t*)buffer;
     

@@ -1,22 +1,24 @@
 #pragma once
 #include <stdint.h>
 
-void putcolor(int x, int y, uint8_t color);
-char getchr(int x, int y);
-uint8_t getcolor(int x, int y);
+void put_color(int x, int y, uint8_t color);
+char get_chr(int x, int y);
+uint8_t get_color(int x, int y);
 
-void setcursor(int x, int y);
-void clrscr();
+void set_cursor(int x, int y);
+void clear_screen();
 void putc(char c);
 
-int lastchrx(int line);
+int last_chr_x(int line);
 
-void rmchr(int x, int y);
-void rmcolor(int x, int y);
-void rmchrs(uint32_t amount);
-void rmline(int line);
-void rmlastline();
+void rm_chr(int x, int y);
+void rm_color(int x, int y);
+
+__attribute__((unused)) void rm_chrs(uint32_t amount);
+void rm_line(int line);
+void rm_last_line();
 
 void puts(const char* str);
 void printf(const char* fmt, ...);
-void print_buffer(const char* msg, const void* buffer, uint32_t count);
+
+__attribute__((unused)) void print_buffer(const char* msg, const void* buffer, uint32_t count);

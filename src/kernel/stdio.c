@@ -11,29 +11,29 @@ const uint8_t DEFAULT_COLOR = 0x7;
 uint8_t* g_ScreenBuffer = (uint8_t*)0xB8000;
 int g_ScreenX = 0, g_ScreenY = 0;
 
-void putchr(int x, int y, char c)
+void put_chr(int x, int y, char c)
 {
     g_ScreenBuffer[2 * (y * SCREEN_WIDTH + x)] = c;
 }
 
-void putcolor(int x, int y, uint8_t color)
+void put_color(int x, int y, uint8_t color)
 {
     g_ScreenBuffer[2 * (y * SCREEN_WIDTH + x) + 1] = color;
 }
 
-char getchr(int x, int y)
+char get_chr(int x, int y)
 {
-    return g_ScreenBuffer[2 * (y * SCREEN_WIDTH + x)];
+    return (char) g_ScreenBuffer[2 * (y * SCREEN_WIDTH + x)];
 }
 
-uint8_t getcolor(int x, int y)
+uint8_t get_color(int x, int y)
 {
     return g_ScreenBuffer[2 * (y * SCREEN_WIDTH + x) + 1];
 }
 
-void setcursor(int x, int y)
+void set_cursor(int x, int y)
 {
-    int pos = y * SCREEN_WIDTH + x;
+    uint8_t pos = y * SCREEN_WIDTH + x;
 
     x86_outb(0x3D4, 0x0F);
     x86_outb(0x3D5, (uint8_t)(pos & 0xFF));
@@ -41,18 +41,18 @@ void setcursor(int x, int y)
     x86_outb(0x3D5, (uint8_t)((pos >> 8) & 0xFF));
 }
 
-void clrscr()
+void clear_screen()
 {
     for (int y = 0; y < SCREEN_HEIGHT; y++)
         for (int x = 0; x < SCREEN_WIDTH; x++)
         {
-            putchr(x, y, '\0');
-            putcolor(x, y, DEFAULT_COLOR);
+            put_chr(x, y, '\0');
+            put_color(x, y, DEFAULT_COLOR);
         }
 
     g_ScreenX = 0;
     g_ScreenY = 0;
-    setcursor(g_ScreenX, g_ScreenY);
+    set_cursor(g_ScreenX, g_ScreenY);
 }
 
 void scrollback(int lines)
@@ -60,21 +60,21 @@ void scrollback(int lines)
     for (int y = lines; y < SCREEN_HEIGHT; y++)
         for (int x = 0; x < SCREEN_WIDTH; x++)
         {
-            putchr(x, y - lines, getchr(x, y));
-            putcolor(x, y - lines, getcolor(x, y));
+            put_chr(x, y - lines, get_chr(x, y));
+            put_color(x, y - lines, get_color(x, y));
         }
 
-    for (int y = SCREEN_HEIGHT - lines; y < SCREEN_HEIGHT; y++)
+    for (uint8_t y = SCREEN_HEIGHT - lines; y < SCREEN_HEIGHT; y++)
         for (int x = 0; x < SCREEN_WIDTH; x++)
         {
-            putchr(x, y, '\0');
-            putcolor(x, y, DEFAULT_COLOR);
+            put_chr(x, y, '\0');
+            put_color(x, y, DEFAULT_COLOR);
         }
 
     g_ScreenY -= lines;
 }
 
-void putc(char c)
+void putc(char c) // NOLINT(misc-no-recursion)
 {
     switch (c)
     {
@@ -93,7 +93,7 @@ void putc(char c)
             break;
 
         default:
-            putchr(g_ScreenX, g_ScreenY, c);
+            put_chr(g_ScreenX, g_ScreenY, c);
             g_ScreenX++;
             break;
     }
@@ -106,30 +106,30 @@ void putc(char c)
     if (g_ScreenY >= SCREEN_HEIGHT)
         scrollback(1);
 
-    setcursor(g_ScreenX, g_ScreenY);
+    set_cursor(g_ScreenX, g_ScreenY);
 }
 
-int lastchrx(int line)
+int last_chr_x(int line)
 {
-    int res = SCREEN_WIDTH;
+    uint8_t res = SCREEN_WIDTH;
 
-    while(getchr(res, line) == '\0' && res >= 0)
+    while(get_chr(res, line) == '\0' && res >= 0)
         res--;
 
     return res;
 }
 
-void rmchr(int x, int y)
+void rm_chr(int x, int y)
 {
     g_ScreenBuffer[2 * (y * SCREEN_WIDTH + x)] = '\0';
 }
 
-void rmcolor(int x, int y)
+void rm_color(int x, int y)
 {
     g_ScreenBuffer[2 * (y * SCREEN_WIDTH + x) + 1] = DEFAULT_COLOR;
 }
 
-void rmchrs(uint32_t amount)
+__attribute__((unused)) void rm_chrs(uint32_t amount)
 {
     for(int i = 0; i < amount; i++)
     {
@@ -137,29 +137,29 @@ void rmchrs(uint32_t amount)
         if(g_ScreenX < 0)
         {
             g_ScreenY--;
-            g_ScreenX = lastchrx(g_ScreenY) + 1;
+            g_ScreenX = last_chr_x(g_ScreenY) + 1;
         }
 
-        rmchr(g_ScreenX, g_ScreenY);
-        rmcolor(g_ScreenX, g_ScreenY);
+        rm_chr(g_ScreenX, g_ScreenY);
+        rm_color(g_ScreenX, g_ScreenY);
     }
-    
-    setcursor(g_ScreenX, g_ScreenY);
+
+    set_cursor(g_ScreenX, g_ScreenY);
 }
 
-void rmline(int line)
+void rm_line(int line)
 {
-    for(int i = SCREEN_WIDTH; i >= 0; i--)
-        putchr(i, line, '\0');
+    for(int i = (int) SCREEN_WIDTH; i >= 0; i--)
+        put_chr(i, line, '\0');
 }
 
-void rmlastline()
+void rm_last_line()
 {
-    rmline(g_ScreenY);
+    rm_line(g_ScreenY);
     g_ScreenY--;
-    g_ScreenX = lastchrx(g_ScreenY) + 1;
+    g_ScreenX = last_chr_x(g_ScreenY) + 1;
 
-    setcursor(g_ScreenX, g_ScreenY);
+    set_cursor(g_ScreenX, g_ScreenY);
 }
 
 void puts(const char* str)
@@ -226,7 +226,7 @@ void printf(const char* fmt, ...)
 
     while (*fmt)
     {
-        switch (state)
+        switch (state) // NOLINT(hicpp-multiway-paths-covered)
         {
             case PRINTF_STATE_NORMAL:
                 switch (*fmt)
@@ -306,9 +306,9 @@ void printf(const char* fmt, ...)
                 {
                     if (sign)
                     {
-                        switch (length)
+                        switch (length) // NOLINT(hicpp-multiway-paths-covered)
                         {
-                        case PRINTF_LENGTH_SHORT_SHORT:
+                        case PRINTF_LENGTH_SHORT_SHORT: // NOLINT(bugprone-branch-clone)
                         case PRINTF_LENGTH_SHORT:
                         case PRINTF_LENGTH_DEFAULT:     printf_signed(va_arg(args, int), radix);
                                                         break;
@@ -322,9 +322,9 @@ void printf(const char* fmt, ...)
                     }
                     else
                     {
-                        switch (length)
+                        switch (length) // NOLINT(hicpp-multiway-paths-covered)
                         {
-                        case PRINTF_LENGTH_SHORT_SHORT:
+                        case PRINTF_LENGTH_SHORT_SHORT: // NOLINT(bugprone-branch-clone)
                         case PRINTF_LENGTH_SHORT:
                         case PRINTF_LENGTH_DEFAULT:     printf_unsigned(va_arg(args, unsigned int), radix);
                                                         break;
@@ -352,12 +352,12 @@ void printf(const char* fmt, ...)
     va_end(args);
 }
 
-void print_buffer(const char* msg, const void* buffer, uint32_t count)
+__attribute__((unused)) void print_buffer(const char* msg, const void* buffer, uint32_t count)
 {
     const uint8_t* u8Buffer = (const uint8_t*)buffer;
     
     puts(msg);
-    for (uint16_t i = 0; i < count; i++)
+    for (uint32_t i = 0; i < count; i++)
     {
         putc(g_HexChars[u8Buffer[i] >> 4]);
         putc(g_HexChars[u8Buffer[i] & 0xF]);

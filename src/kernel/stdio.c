@@ -11,29 +11,29 @@ const uint8_t DEFAULT_COLOR = 0x7;
 uint8_t* g_ScreenBuffer = (uint8_t*)0xB8000;
 int g_ScreenX = 0, g_ScreenY = 0;
 
-void put_chr(uint8_t x, uint8_t y, char c)
+void putchr(int x, int y, char c)
 {
     g_ScreenBuffer[2 * (y * SCREEN_WIDTH + x)] = c;
 }
 
-void put_color(uint8_t x, uint8_t y, uint8_t color)
+void putcolor(int x, int y, uint8_t color)
 {
     g_ScreenBuffer[2 * (y * SCREEN_WIDTH + x) + 1] = color;
 }
 
-char get_chr(uint8_t x, uint8_t y)
+char getchr(int x, int y)
 {
-    return (char) g_ScreenBuffer[2 * (y * SCREEN_WIDTH + x)];
+    return g_ScreenBuffer[2 * (y * SCREEN_WIDTH + x)];
 }
 
-uint8_t get_color(uint8_t x, uint8_t y)
+uint8_t getcolor(int x, int y)
 {
     return g_ScreenBuffer[2 * (y * SCREEN_WIDTH + x) + 1];
 }
 
-void set_cursor(uint8_t x, uint8_t y)
+void setcursor(int x, int y)
 {
-    uint8_t pos = y * SCREEN_WIDTH + x;
+    int pos = y * SCREEN_WIDTH + x;
 
     x86_outb(0x3D4, 0x0F);
     x86_outb(0x3D5, (uint8_t)(pos & 0xFF));
@@ -41,18 +41,18 @@ void set_cursor(uint8_t x, uint8_t y)
     x86_outb(0x3D5, (uint8_t)((pos >> 8) & 0xFF));
 }
 
-void clear_screen()
+void clrscr()
 {
     for (int y = 0; y < SCREEN_HEIGHT; y++)
         for (int x = 0; x < SCREEN_WIDTH; x++)
         {
-            put_chr(x, y, '\0');
-            put_color(x, y, DEFAULT_COLOR);
+            putchr(x, y, '\0');
+            putcolor(x, y, DEFAULT_COLOR);
         }
 
     g_ScreenX = 0;
     g_ScreenY = 0;
-    set_cursor(g_ScreenX, g_ScreenY);
+    setcursor(g_ScreenX, g_ScreenY);
 }
 
 void scrollback(int lines)
@@ -60,22 +60,20 @@ void scrollback(int lines)
     for (int y = lines; y < SCREEN_HEIGHT; y++)
         for (int x = 0; x < SCREEN_WIDTH; x++)
         {
-            put_chr(x, y - lines, get_chr(x, y));
-            put_color(x, y - lines, get_color(x, y));
+            putchr(x, y - lines, getchr(x, y));
+            putcolor(x, y - lines, getcolor(x, y));
         }
 
-    for (uint8_t y = SCREEN_HEIGHT - lines; y < SCREEN_HEIGHT; y++)
-        for (uint8_t x = 0; x < SCREEN_WIDTH; x++)
+    for (int y = SCREEN_HEIGHT - lines; y < SCREEN_HEIGHT; y++)
+        for (int x = 0; x < SCREEN_WIDTH; x++)
         {
-            put_chr(x, y, '\0');
-            put_color(x, y, DEFAULT_COLOR);
+            putchr(x, y, '\0');
+            putcolor(x, y, DEFAULT_COLOR);
         }
 
     g_ScreenY -= lines;
 }
 
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "misc-no-recursion"
 void putc(char c)
 {
     switch (c)
@@ -84,7 +82,7 @@ void putc(char c)
             g_ScreenX = 0;
             g_ScreenY++;
             break;
-
+    
         case '\t':
             for (int i = 0; i < 4 - (g_ScreenX % 4); i++)
                 putc(' ');
@@ -95,7 +93,7 @@ void putc(char c)
             break;
 
         default:
-            put_chr(g_ScreenX, g_ScreenY, c);
+            putchr(g_ScreenX, g_ScreenY, c);
             g_ScreenX++;
             break;
     }
@@ -108,31 +106,30 @@ void putc(char c)
     if (g_ScreenY >= SCREEN_HEIGHT)
         scrollback(1);
 
-    set_cursor(g_ScreenX, g_ScreenY);
+    setcursor(g_ScreenX, g_ScreenY);
 }
-#pragma clang diagnostic pop
 
-uint8_t last_chr_x(int line)
+int lastchrx(int line)
 {
-    unsigned int res = SCREEN_WIDTH;
+    int res = SCREEN_WIDTH;
 
-    while(get_chr(res, line) == '\0' && res >= 0)
+    while(getchr(res, line) == '\0' && res >= 0)
         res--;
 
     return res;
 }
 
-void rm_chr(uint8_t x, uint8_t y)
+void rmchr(int x, int y)
 {
     g_ScreenBuffer[2 * (y * SCREEN_WIDTH + x)] = '\0';
 }
 
-void rm_color(uint8_t x, uint8_t y)
+void rmcolor(int x, int y)
 {
     g_ScreenBuffer[2 * (y * SCREEN_WIDTH + x) + 1] = DEFAULT_COLOR;
 }
 
-__attribute__((unused)) void rm_chrs(uint32_t amount)
+void rmchrs(uint32_t amount)
 {
     for(int i = 0; i < amount; i++)
     {
@@ -140,29 +137,29 @@ __attribute__((unused)) void rm_chrs(uint32_t amount)
         if(g_ScreenX < 0)
         {
             g_ScreenY--;
-            g_ScreenX = last_chr_x(g_ScreenY) + 1;
+            g_ScreenX = lastchrx(g_ScreenY) + 1;
         }
 
-        rm_chr(g_ScreenX, g_ScreenY);
-        rm_color(g_ScreenX, g_ScreenY);
+        rmchr(g_ScreenX, g_ScreenY);
+        rmcolor(g_ScreenX, g_ScreenY);
     }
-
-    set_cursor(g_ScreenX, g_ScreenY);
+    
+    setcursor(g_ScreenX, g_ScreenY);
 }
 
-void rm_line(uint8_t line)
+void rmline(int line)
 {
-    for(uint8_t i = SCREEN_WIDTH; i >= 0; i--)
-        put_chr(i, line, '\0');
+    for(int i = SCREEN_WIDTH; i >= 0; i--)
+        putchr(i, line, '\0');
 }
 
-void rm_last_line()
+void rmlastline()
 {
-    rm_line(g_ScreenY);
+    rmline(g_ScreenY);
     g_ScreenY--;
-    g_ScreenX = last_chr_x(g_ScreenY) + 1;
+    g_ScreenX = lastchrx(g_ScreenY) + 1;
 
-    set_cursor(g_ScreenX, g_ScreenY);
+    setcursor(g_ScreenX, g_ScreenY);
 }
 
 void puts(const char* str)

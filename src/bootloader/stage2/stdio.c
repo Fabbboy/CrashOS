@@ -41,7 +41,7 @@ void setcursor(int x, int y)
     x86_outb(0x3D5, (uint8_t)((pos >> 8) & 0xFF));
 }
 
-void clrscr()
+void clear_screen()
 {
     for (int y = 0; y < SCREEN_HEIGHT; y++)
         for (int x = 0; x < SCREEN_WIDTH; x++)

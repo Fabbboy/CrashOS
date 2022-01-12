@@ -1,7 +1,7 @@
 #pragma once
 #include <stdint.h>
 
-void clrscr();
+void clear_screen();
 void putc(char c);
 void puts(const char* str);
 void printf(const char* fmt, ...);

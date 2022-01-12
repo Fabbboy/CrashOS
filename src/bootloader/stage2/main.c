@@ -13,7 +13,7 @@ typedef void (*KernelStart)();
 
 void __attribute__((cdecl)) start(uint16_t bootDrive)
 {
-    clrscr();
+    clear_screen();
 
     DISK disk;
     if (!DISK_Initialize(&disk, bootDrive))

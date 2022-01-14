@@ -11,8 +11,8 @@ _Noreturn void __attribute__((section(".entry"))) start(uint16_t bootDrive)
 
     clear_screen();
 
-    printf("Hello world from kernel!!!\nTest");
-    rm_last_line();
+    printf("Hello world from kernel!!!\n");
+    printf("Boot drive: %u\n", bootDrive);
 
 end:
     for (;;);

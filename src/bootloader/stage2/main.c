@@ -1,6 +1,5 @@
 #include <stdint.h>
 #include "stdio.h"
-#include "x86.h"
 #include "disk.h"
 #include "fat.h"
 #include "memdefs.h"

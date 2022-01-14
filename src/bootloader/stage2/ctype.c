@@ -7,5 +7,5 @@ bool islower(char chr)
 
 char toupper(char chr)
 {
-    return islower(chr) ? (chr - 'a' + 'A') : chr;
+    return islower(chr) ? (chr - 'a' + 'A') : chr; // NOLINT(cppcoreguidelines-narrowing-conversions)
 }

@@ -10,7 +10,7 @@ uint8_t* Kernel = (uint8_t*)MEMORY_KERNEL_ADDR;
 
 typedef void (*KernelStart)();
 
-_Noreturn void __attribute__((cdecl)) start(uint16_t bootDrive)
+__attribute__((unused)) _Noreturn void __attribute__((cdecl)) start(uint16_t bootDrive)
 {
     clear_screen();
 

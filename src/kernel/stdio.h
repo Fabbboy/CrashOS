@@ -20,5 +20,6 @@ void rm_last_line();
 
 void puts(const char* str);
 void printf(const char* fmt, ...);
+void println();
 
 __attribute__((unused)) void print_buffer(const char* msg, const void* buffer, uint32_t count);

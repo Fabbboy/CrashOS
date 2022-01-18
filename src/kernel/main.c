@@ -2,6 +2,7 @@
 #include "stdio.h"
 #include "memory.h"
 #include "isr.h"
+#include "keyboard.h"
 
 extern uint8_t __bss_start;
 extern uint8_t __end;
@@ -18,6 +19,9 @@ __attribute__((unused)) _Noreturn void __attribute__((section(".entry"))) start(
 
     printf("Enabling external interrupts\n");
     __asm__ volatile("sti");
+
+    printf("Initializing keyboard (IRQ 1)...\n");
+    init_keyboard();
 
     for (;;);
 }

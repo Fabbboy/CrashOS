@@ -36,9 +36,13 @@ void set_cursor(int x, int y)
     uint16_t pos = y * SCREEN_WIDTH + x;
 
     port_byte_out(0x3D4, 0x0F);
-    port_word_out(0x3D5, (uint8_t)(pos & 0xFF));
+    port_byte_out(0x3D5, (uint8_t)(pos & 0xFF));
     port_byte_out(0x3D4, 0x0E);
-    port_word_out(0x3D5, (uint8_t)((pos >> 8) & 0xFF));
+    port_byte_out(0x3D5, (uint8_t)((pos >> 8) & 0xFF));
+}
+
+void set_last_char_cursor() {
+    set_cursor(g_ScreenX, g_ScreenY);
 }
 
 void clear_screen()
@@ -52,7 +56,7 @@ void clear_screen()
 
     g_ScreenX = 0;
     g_ScreenY = 0;
-    set_cursor(g_ScreenX, g_ScreenY);
+    set_last_char_cursor();
 }
 
 void scrollback(int lines)
@@ -106,7 +110,7 @@ void putc(char c) // NOLINT(misc-no-recursion)
     if (g_ScreenY >= SCREEN_HEIGHT)
         scrollback(1);
 
-    set_cursor(g_ScreenX, g_ScreenY);
+    set_last_char_cursor();
 }
 
 int last_chr_x(int line)
@@ -133,7 +137,7 @@ void rm_last_char() {
     if(g_ScreenX - 1 >= 0) {
         rm_chr(g_ScreenX-1, g_ScreenY);
         g_ScreenX--;
-        set_cursor(g_ScreenX, g_ScreenY);
+        set_last_char_cursor();
     }else {
         rm_last_line();
     }
@@ -154,7 +158,7 @@ __attribute__((unused)) void rm_chrs(uint32_t amount)
         rm_color(g_ScreenX, g_ScreenY);
     }
 
-    set_cursor(g_ScreenX, g_ScreenY);
+    set_last_char_cursor();
 }
 
 void rm_line(int line)
@@ -170,7 +174,7 @@ void rm_last_line()
     g_ScreenY--;
     g_ScreenX = last_chr_x(g_ScreenY) + 1;
 
-    set_cursor(g_ScreenX, g_ScreenY);
+    set_last_char_cursor();
 }
 
 void puts(const char* str)

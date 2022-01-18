@@ -288,7 +288,7 @@ bool FAT_FindFile(DISK* disk, FAT_File* file, const char* name, FAT_DirectoryEnt
     memset(fatName, ' ', sizeof(fatName));
     fatName[11] = '\0';
 
-    const char* ext = strchr(name, '.');
+    const char* ext = str_chr(name, '.');
     if (ext == NULL)
         ext = name + 11;
 
@@ -326,7 +326,7 @@ FAT_File* FAT_Open(DISK* disk, const char* path)
     while (*path) {
         // extract next file name from path
         bool isLast = false;
-        const char* delim = strchr(path, '/');
+        const char* delim = str_chr(path, '/');
         if (delim != NULL)
         {
             memcpy(name, path, delim - path);
@@ -335,7 +335,7 @@ FAT_File* FAT_Open(DISK* disk, const char* path)
         }
         else
         {
-            unsigned len = strlen(path);
+            unsigned len = str_len(path);
             memcpy(name, path, len);
             name[len + 1] = '\0';
             path += len;

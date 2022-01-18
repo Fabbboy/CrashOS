@@ -33,12 +33,12 @@ uint8_t get_color(int x, int y)
 
 void set_cursor(int x, int y)
 {
-    uint8_t pos = y * SCREEN_WIDTH + x;
+    uint16_t pos = y * SCREEN_WIDTH + x;
 
     port_byte_out(0x3D4, 0x0F);
-    port_byte_out(0x3D5, (uint8_t)(pos & 0xFF));
+    port_word_out(0x3D5, (uint8_t)(pos & 0xFF));
     port_byte_out(0x3D4, 0x0E);
-    port_byte_out(0x3D5, (uint8_t)((pos >> 8) & 0xFF));
+    port_word_out(0x3D5, (uint8_t)((pos >> 8) & 0xFF));
 }
 
 void clear_screen()
@@ -129,6 +129,16 @@ void rm_color(int x, int y)
     g_ScreenBuffer[2 * (y * SCREEN_WIDTH + x) + 1] = DEFAULT_COLOR;
 }
 
+void rm_last_char() {
+    if(g_ScreenX - 1 >= 0) {
+        rm_chr(g_ScreenX-1, g_ScreenY);
+        g_ScreenX--;
+        set_cursor(g_ScreenX, g_ScreenY);
+    }else {
+        rm_last_line();
+    }
+}
+
 __attribute__((unused)) void rm_chrs(uint32_t amount)
 {
     for(int i = 0; i < amount; i++)
@@ -155,6 +165,7 @@ void rm_line(int line)
 
 void rm_last_line()
 {
+    if(g_ScreenY == 0) return;
     rm_line(g_ScreenY);
     g_ScreenY--;
     g_ScreenX = last_chr_x(g_ScreenY) + 1;

@@ -13,6 +13,7 @@ int last_chr_x(int line);
 
 void rm_chr(int x, int y);
 void rm_color(int x, int y);
+void rm_last_char();
 
 __attribute__((unused)) void rm_chrs(uint32_t amount);
 void rm_line(int line);

@@ -1,5 +1,5 @@
 #include "stdio.h"
-#include "x86.h"
+#include "ports.h"
 
 #include <stdarg.h>
 #include <stdbool.h>
@@ -35,10 +35,10 @@ void set_cursor(int x, int y)
 {
     uint8_t pos = y * SCREEN_WIDTH + x;
 
-    x86_outb(0x3D4, 0x0F);
-    x86_outb(0x3D5, (uint8_t)(pos & 0xFF));
-    x86_outb(0x3D4, 0x0E);
-    x86_outb(0x3D5, (uint8_t)((pos >> 8) & 0xFF));
+    port_byte_out(0x3D4, 0x0F);
+    port_byte_out(0x3D5, (uint8_t)(pos & 0xFF));
+    port_byte_out(0x3D4, 0x0E);
+    port_byte_out(0x3D5, (uint8_t)((pos >> 8) & 0xFF));
 }
 
 void clear_screen()

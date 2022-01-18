@@ -240,18 +240,7 @@ enum keycode get_de_keycode(uint8_t scancode) {
 }
 
 enum keycode get_keycode(uint8_t scancode) {
-    switch (current_keyboard_layout) {
-        case De:
-            return get_de_keycode(scancode);
-        case Us:
-            //TODO US Layout: http://kbdlayout.info/kbdus/virtualkeys
-            printf("ERROR: US Keyboard not yet supported!");
-            return UNKNOWN;
-        default:
-            // http://kbdlayout.info/KBDGR/virtualkeys
-            printf("ERROR: Unknown Keyboard Layout!");
-            return UNKNOWN;
-    }
+    return get_de_keycode(scancode);
 }
 
 char* keycode_to_string(enum keycode keycode) {
@@ -328,6 +317,12 @@ char* keycode_to_string(enum keycode keycode) {
             return "8";
         case VK_9:
             return "9";
+        case VK_OEM_1:
+            return "ü";
+        case VK_OEM_3:
+            return "ö";
+        case VK_OEM_7:
+            return "ä";
         case VK_OEM_102:
             return "<";
         case VK_OEM_5:

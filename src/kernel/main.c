@@ -16,11 +16,15 @@ __attribute__((unused)) _Noreturn void __attribute__((section(".entry"))) start(
 
     printf("Installing Interrupt services...\n");
     isr_install();
+    printf("Interrupt services installed!\n");
 
     printf("Enabling external interrupts\n");
     __asm__ volatile("sti");
+    printf("External interrupts enabled!\n");
 
     printf("Initializing keyboard (IRQ 1)...\n");
+    init_keyboard();
+    printf("Keyboard initialized!\n");
     init_keyboard();
 
     for (;;);

@@ -119,13 +119,6 @@ enum keycode {
     VK_ABNT_C2
 };
 
-enum keyboard_layouts {
-    De,
-    Us
-};
-
-enum keyboard_layouts current_keyboard_layout = De;
-
 char* keycode_to_string(enum keycode keycode);
 
 void init_keyboard();

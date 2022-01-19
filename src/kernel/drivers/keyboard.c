@@ -2,7 +2,7 @@
 #include "ports.h"
 #include "../cpu/isr.h"
 #include "../video/stdio.h"
-#include "../util/string.h"
+#include "../lib/string.h"
 
 enum keycode get_de_keycode(uint8_t scancode) {
     switch (scancode) {
@@ -355,14 +355,14 @@ char* keycode_to_string(enum keycode keycode) {
 
 static enum keycode lastcode = UNKNOWN;
 
-static void keyboard_callback(registers_t* regs) {
+static void keyboard_callback(__attribute__((unused)) registers_t* regs) {
     uint8_t scancode = port_byte_in(0x60);
     enum keycode code = get_keycode(scancode);
     if(code == lastcode) return;
     lastcode = code;
     if(code != UNKNOWN) {
         char* str = keycode_to_string(code);
-        if(str_len(str) == 0) return;
+        if(strlen(str) == 0) return;
         printf("%s", str);
     }
 }

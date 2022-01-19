@@ -1,7 +1,7 @@
 #include "isr.h"
 #include "idt.h"
-#include "ports.h"
-#include "stdio.h"
+#include "../drivers/ports.h"
+#include "../video/stdio.h"
 
 isr_t interrupt_handlers[256];
 

@@ -1,8 +1,8 @@
 #include "keyboard.h"
 #include "ports.h"
-#include "isr.h"
-#include "stdio.h"
-#include "string.h"
+#include "../cpu/isr.h"
+#include "../video/stdio.h"
+#include "../util/string.h"
 
 enum keycode get_de_keycode(uint8_t scancode) {
     switch (scancode) {

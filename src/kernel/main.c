@@ -1,8 +1,8 @@
 #include <stdint.h>
-#include "stdio.h"
-#include "memory.h"
-#include "isr.h"
-#include "keyboard.h"
+#include "video/stdio.h"
+#include "util/memory.h"
+#include "cpu/isr.h"
+#include "drivers/keyboard.h"
 
 extern uint8_t __bss_start;
 extern uint8_t __end;

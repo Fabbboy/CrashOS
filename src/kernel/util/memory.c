@@ -11,7 +11,7 @@ void* memcpy(void* dst, const void* src, uint16_t num)
     return dst;
 }
 
-void * memset(void * ptr, int value, uint16_t num)
+void* memset(void * ptr, int value, uint16_t num)
 {
     uint8_t* u8Ptr = (uint8_t *)ptr;
 

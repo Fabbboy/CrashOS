@@ -14,7 +14,7 @@ __attribute__((unused)) _Noreturn void __attribute__((section(".entry"))) start(
 
     clear_screen();
 
-    printf("Hello world from kernel!!!\n");
+    printf("Hello World from Kernel!!!\n");
 
     for (;;);
 }

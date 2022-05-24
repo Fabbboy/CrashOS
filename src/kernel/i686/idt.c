@@ -1,6 +1,7 @@
 #include "idt.h"
 #include <stdint.h>
 #include "../util/binary.h"
+#include "../util/util.h"
 
 typedef struct
 {
@@ -26,11 +27,11 @@ void __attribute__((cdecl)) i686_IDT_Load(IDTDescriptor* idtDescriptor);
 
 void i686_IDT_SetGate(int interrupt, void* base, uint16_t segmentDescriptor, uint8_t flags)
 {
-    g_IDT[interrupt].BaseLow = ((uint32_t)base) & 0xFFFF;
+    g_IDT[interrupt].BaseLow = low_16((uint32_t)base);
     g_IDT[interrupt].SegmentSelector = segmentDescriptor;
     g_IDT[interrupt].Reserved = 0;
     g_IDT[interrupt].Flags = flags;
-    g_IDT[interrupt].BaseHigh = ((uint32_t)base >> 16) & 0xFFFF;
+    g_IDT[interrupt].BaseHigh = high_16((uint32_t)base);
 }
 
 void i686_IDT_EnableGate(int interrupt)

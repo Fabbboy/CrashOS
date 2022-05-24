@@ -14,7 +14,7 @@ i686_inb:
     in al, dx
     ret
 
-global i686_panic
-i686_panic:
+global i686_Panic
+i686_Panic:
     cli
     hlt

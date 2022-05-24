@@ -564,8 +564,9 @@ static const char* const g_Exceptions[] = {
 
 void i686_ISR_Initialize() {
     i686_ISR_InitializeGates();
-    for(int i = 0; i < 256; i++)
+    for(int i = 0; i < 256; i++) {
         i686_IDT_EnableGate(i);
+    }
 }
 
 void __attribute__((cdecl)) i686_ISR_Handler(Registers* regs) {
@@ -582,6 +583,6 @@ void __attribute__((cdecl)) i686_ISR_Handler(Registers* regs) {
         printf("  interrupt=%x  errorcode=%x\n", regs->interrupt, regs->error);
 
         printf("KERNEL PANIC!\n");
-        i686_panic();
+        i686_Panic();
     }
 }

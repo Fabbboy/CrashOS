@@ -10,5 +10,10 @@ typedef struct {
 
 typedef void (*ISRHandler)(Registers* regs);
 
+#define get_interrupt(arg) __asm__("int %0\n" : : "N"((arg)) : "cc", "memory")
+
 void i686_ISR_Initialize();
-void i686_ISR_RegisterHandler(int interrupt);
+void i686_ISR_RegisterHandler(int interrupt, ISRHandler handler);
+void i686_ISR_UnregisterHandler(int interrupt);
+
+void print_regs(Registers* regs);

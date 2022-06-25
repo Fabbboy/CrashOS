@@ -2,7 +2,8 @@
 #include "video/stdio.h"
 #include "util/memory.h"
 #include "hal/hal.h"
-#include "i686/isr.h"
+#include "driver/timer.h"
+#include "driver/keyboard.h"
 
 extern uint8_t __bss_start;
 extern uint8_t __end;
@@ -21,6 +22,9 @@ __attribute__((unused)) _Noreturn void __attribute__((section(".entry"))) start(
     printf("Enabling external interrupts...\n");
     __asm__ volatile("sti");
     printf("External interrupts enabled!\n");
+
+    timer_install();
+    keyboard_install();
 
     for (;;);
 }

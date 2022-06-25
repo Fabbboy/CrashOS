@@ -73,6 +73,14 @@ static uint16_t __pic_get_irq_reg(int ocw3) {
     return (i686_inb(PIC2_COMMAND) << 8) | i686_inb(PIC1_COMMAND);
 }
 
+void IRQ_RegisterHandler(int irq, ISRHandler handler) {
+    i686_ISR_RegisterHandler(irq + 32, handler);
+}
+
+void IRQ_UnregisterHandler(int irq) {
+    i686_ISR_UnregisterHandler(irq + 32);
+}
+
 uint16_t pic_get_irr() {
     return __pic_get_irq_reg(PIC_READ_IRR);
 }

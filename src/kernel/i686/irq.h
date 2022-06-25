@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdint.h>
+#include "isr.h"
 
 #define PIC1            0x20        //Master PIC
 #define PIC2            0xA0        //Slave PIC
@@ -30,5 +31,7 @@ void PIC_sendEOI(unsigned char irq);
 void PIC_remap();
 void IRQ_set_mask(unsigned char irqLine);
 void IRQ_clear_mask(unsigned char irqLine);
+void IRQ_RegisterHandler(int irq, ISRHandler handler);
+void IRQ_UnregisterHandler(int irq);
 uint16_t pic_get_irr();
 uint16_t pic_get_isr();

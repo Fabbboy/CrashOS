@@ -44,7 +44,7 @@ unsigned char kbdde[128] =
         };
 
 void keyboard_handler(Registers* regs) {
-    unsigned char scancode = i686_inb(0x60);
+    unsigned char scancode = inb(KEYBOARD_PORT);
 
     if(scancode & 0x80) {
         //released

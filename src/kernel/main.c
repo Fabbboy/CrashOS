@@ -2,7 +2,7 @@
 #include "video/stdio.h"
 #include "util/memory.h"
 #include "hal/hal.h"
-#include "driver/timer.h"
+#include "driver/pit.h"
 #include "driver/keyboard.h"
 
 extern uint8_t __bss_start;
@@ -23,7 +23,7 @@ __attribute__((unused)) _Noreturn void __attribute__((section(".entry"))) start(
     __asm__ volatile("sti");
     printf("External interrupts enabled!\n");
 
-    timer_install();
+    pit_install();
     keyboard_install();
 
     for (;;);

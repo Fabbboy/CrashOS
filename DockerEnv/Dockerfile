@@ -15,7 +15,7 @@ RUN apt-get install -y libmpc-dev
 RUN apt-get install -y libmpfr-dev
 RUN apt-get install -y texinfo
 RUN apt-get install -y mtools
-RUN apt-get install -y qemu-system-x86_64
+RUN apt-get install -y qemu-system-i386
 RUN apt-get install -y dosfstools
 
 

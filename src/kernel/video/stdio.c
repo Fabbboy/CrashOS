@@ -61,26 +61,23 @@ void clear_screen()
 
 void scrollback(int lines)
 {
-    //iterate through the lines until the last line
+    //we are moving the screen buffer up by lines lines.
     for (int y = lines; y < SCREEN_HEIGHT; y++)
     {
-        //iterate through the columns until the last column
+
         for (int x = 0; x < SCREEN_WIDTH; x++)
         {
-            //copy the character and color from the next line
             put_chr(x, y, get_chr(x, y + lines));
             put_color(x, y, get_color(x, y + lines));
         }
     }
-    //clear the last lines
+    //we are clearing the last lines.
     for (int y = SCREEN_HEIGHT - lines; y < SCREEN_HEIGHT; y++)
         for (int x = 0; x < SCREEN_WIDTH; x++)
         {
             put_chr(x, y, '\0');
             put_color(x, y, DEFAULT_COLOR);
         }
-
-    //set the cursor to the last line
     g_ScreenY = SCREEN_HEIGHT - lines;
 }
 
@@ -89,6 +86,9 @@ void putc(char c) // NOLINT(misc-no-recursion)
     switch (c)
     {
         case '\n':
+            //check if line is empty if so return. if not, move to next line.
+            if (g_ScreenX == 0)
+                return;
             g_ScreenX = 0;
             g_ScreenY++;
             break;

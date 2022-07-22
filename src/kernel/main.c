@@ -18,11 +18,6 @@ __attribute__((unused)) _Noreturn void __attribute__((section(".entry"))) start(
 
     printf("Hello World from Kernel!!!\n");
 
-
-    printf("Enabling external interrupts...\n");
-    __asm__ volatile("sti");
-    printf("External interrupts enabled!\n");
-
     pit_install();
     keyboard_install();
 

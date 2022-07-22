@@ -9,5 +9,5 @@ void HAL_Initialize()
     i686_GDT_Initialize();
     i686_IDT_Initialize();
     i686_ISR_Initialize();
-    PIC_remap();
+    i686_IRQ_Initialize();
 }

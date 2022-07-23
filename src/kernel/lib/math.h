@@ -1,7 +1,4 @@
-
-
-#ifndef CRASHOS_MATH_H
-#define CRASHOS_MATH_H
+#pragma once
 
 double sin(double x); //sinus of x
 double cos(double x); //cosinus of x
@@ -24,6 +21,3 @@ double fabs(double x); //absolute value of x
 double ldexp(double x, int n); //x * 2^n
 double modf(double x, double* iptr); //split x into fraction and integer
 double fmod(double x, double y); //fractional part of x/y
-
-
-#endif //CRASHOS_MATH_H

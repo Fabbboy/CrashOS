@@ -173,6 +173,7 @@ void rm_line(int line)
         put_chr(i, line, '\0');
 }
 
+
 void rm_last_line()
 {
     if(g_ScreenY == 0) return;

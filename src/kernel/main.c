@@ -1,6 +1,6 @@
 #include <stdint.h>
 #include "video/stdio.h"
-#include "util/memory.h"
+#include "lib/memory.h"
 #include "hal/hal.h"
 #include "driver/pit.h"
 #include "driver/keyboard.h"

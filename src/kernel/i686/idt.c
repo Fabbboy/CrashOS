@@ -1,7 +1,7 @@
 #include "idt.h"
 #include <stdint.h>
-#include "../util/binary.h"
-#include "../util/util.h"
+#include "../lib/binary.h"
+#include "../lib/util.h"
 
 typedef struct
 {

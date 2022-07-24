@@ -1,12 +1,10 @@
 #pragma once
 #include <stdint.h>
-#include "stdbool.h"
 
 //Define screenwidtrh
 #define SCREEN_WIDTH 80
 #define SCREEN_HEIGHT 25
 
-bool upper_case = false;
 
 void put_color(int x, int y, uint8_t color);
 char get_chr(int x, int y);

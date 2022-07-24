@@ -53,10 +53,7 @@ double fabs(double x){
     return x;
 }
 
-double ldexp(double x, int n){
-    return x * pow(2, n);
-}
-
+double ldexp(double x, int n);
 double modf(double x, double* iptr){
     *iptr = (int)x;
     return x - *iptr;

@@ -1,6 +1,11 @@
 #pragma once
 #include <stdint.h>
 
+#define shiftIsClicked false
+//Define screenwidtrh
+#define SCREEN_WIDTH 80
+#define SCREEN_HEIGHT 25
+
 void put_color(int x, int y, uint8_t color);
 char get_chr(int x, int y);
 uint8_t get_color(int x, int y);
@@ -24,5 +29,7 @@ void puts(const char* str);
 void printf(const char* fmt, ...);
 void println();
 
+void arrow_right();
+void arrow_left();
 
 __attribute__((unused)) void print_buffer(const char* msg, const void* buffer, uint32_t count);

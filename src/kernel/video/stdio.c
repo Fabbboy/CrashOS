@@ -4,8 +4,6 @@
 #include <stdarg.h>
 #include <stdbool.h>
 
-const unsigned SCREEN_WIDTH = 80;
-const unsigned SCREEN_HEIGHT = 25;
 const uint8_t DEFAULT_COLOR = 0x7;
 
 uint8_t* g_ScreenBuffer = (uint8_t*)0xB8000;
@@ -400,3 +398,16 @@ __attribute__((unused)) void print_buffer(const char* msg, const void* buffer, u
     }
     puts("\n");
 }
+
+void arrow_right(){
+    putc('\x1b');
+    putc('[');
+    putc('C');
+}
+
+void arrow_left(){
+    if(g_ScreenX > 0){
+        g_ScreenX--;
+        set_cursor(g_ScreenX, g_ScreenY);
+    }
+};

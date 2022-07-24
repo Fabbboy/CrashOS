@@ -51,6 +51,20 @@ void keyboard_handler(Registers* regs) {
     } else {
         //pressed
 
+        //switch case for special keys
+        switch(scancode){
+            //arrow left
+            case 0x4B:
+                arrow_left();
+                return;
+                break;
+            //arrow right
+            case 0x4D:
+                arrow_right();
+                return;
+                break;
+        }
+
         if(scancode == 14) {
             rm_last_char();
             return;

@@ -58,7 +58,7 @@ void keyboard_handler(Registers* regs) {
                 arrow_left();
                 return;
                 break;
-            //arrow right
+                //arrow right
             case 0x4D:
                 arrow_right();
                 return;

@@ -5,6 +5,8 @@
 
 const uint8_t DEFAULT_COLOR = 0x7;
 
+int isHappening = 0;
+
 uint8_t* g_ScreenBuffer = (uint8_t*)0xB8000;
 int g_ScreenX = 0, g_ScreenY = 0;
 
@@ -27,6 +29,16 @@ uint8_t get_color(int x, int y)
 {
     return g_ScreenBuffer[2 * (y * SCREEN_WIDTH + x) + 1];
 }
+int getLength(int line) {
+    int length = 0;
+    for (int i = 0; i < SCREEN_WIDTH; i++) {
+        if (get_chr(i, line) == '\0') {
+            break;
+        }
+        length++;
+    }
+    return length;
+};
 
 void set_cursor(int x, int y)
 {
@@ -58,7 +70,6 @@ void clear_screen()
 
 void scrollback(int lines)
 {
-    //we are moving the screen buffer up by lines lines.
     for (int y = lines; y < SCREEN_HEIGHT; y++)
     {
 
@@ -84,16 +95,18 @@ void putc(char c) // NOLINT(misc-no-recursion)
     {
         case '\n':
             //if line is empty put a space to avoid a line break.
-            if (g_ScreenX == 0)
+            if (g_ScreenX == 0 && isHappening == 0)
             {
                 put_chr(g_ScreenX, g_ScreenY, ' ');
                 put_color(g_ScreenX, g_ScreenY, DEFAULT_COLOR);
             }
+            isHappening = 0;
             g_ScreenX = 0;
             g_ScreenY++;
             break;
 
         case '\t':
+            isHappening = 1;
             for (int i = 0; i < 4 - (g_ScreenX % 4); i++)
                 putc(' ');
             break;
@@ -103,11 +116,12 @@ void putc(char c) // NOLINT(misc-no-recursion)
             break;
 
         default:
-           /* put_chr(g_ScreenX, g_ScreenY, c);
-            g_ScreenX++;*/
+            /* put_chr(g_ScreenX, g_ScreenY, c);
+             g_ScreenX++;*/
 
-           put_chr(g_ScreenX, g_ScreenY, c);
-           g_ScreenX++;
+            isHappening = 1;
+            put_chr(g_ScreenX, g_ScreenY, c);
+            g_ScreenX++;
     }
 
     if (g_ScreenX >= SCREEN_WIDTH)
@@ -147,7 +161,16 @@ void rm_last_char() {
         g_ScreenX--;
         set_last_char_cursor();
     }else {
-        rm_last_line();
+        //check if line includes content. If yes, move one line up but nothing else. If no remove the line.
+        if(getLength(g_ScreenY) > 0) {
+           //move one line up.
+              g_ScreenY--;
+              //set cursor to last char of the line.
+                g_ScreenX = last_chr_x(g_ScreenY);
+                set_last_char_cursor();
+        }else {
+            rm_last_line();
+        }
     }
 }
 
@@ -404,6 +427,11 @@ void arrow_right(){
     if(g_ScreenX < SCREEN_WIDTH - 1){
         g_ScreenX++;
         set_cursor(g_ScreenX, g_ScreenY);
+    }else{
+        g_ScreenX = 0;
+        g_ScreenY++;
+        set_cursor(g_ScreenX, g_ScreenY);
+        isHappening == 1;
     }
 }
 
@@ -411,5 +439,11 @@ void arrow_left(){
     if(g_ScreenX > 0){
         g_ScreenX--;
         set_cursor(g_ScreenX, g_ScreenY);
+        isHappening = 1;
+    }else{
+        g_ScreenX = SCREEN_WIDTH - 1;
+        g_ScreenY--;
+        set_cursor(g_ScreenX, g_ScreenY);
+        isHappening = 1;
     }
 };

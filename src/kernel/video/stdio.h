@@ -9,6 +9,7 @@
 void put_color(int x, int y, uint8_t color);
 char get_chr(int x, int y);
 uint8_t get_color(int x, int y);
+int getLength(int line);
 
 void set_cursor(int x, int y);
 void set_last_char_cursor();
@@ -31,5 +32,7 @@ void println();
 
 void arrow_right();
 void arrow_left();
+
+
 
 __attribute__((unused)) void print_buffer(const char* msg, const void* buffer, uint32_t count);

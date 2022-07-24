@@ -11,7 +11,7 @@
 #define ROOT_DIRECTORY_HANDLE   -1
 #define MEMORY_FAT_SIZE         0x10000
 
-#define min(a,b)    ((a) < (b) ? (a) : (b))
+#define fmin(a,b)    ((a) < (b) ? (a) : (b))
 #define max(a,b)    ((a) > (b) ? (a) : (b))
 
 #pragma pack(push, 1)
@@ -208,12 +208,12 @@ uint32_t FAT_Read(DISK* disk, FAT_File far* file, uint32_t byteCount, void* data
 
     // don't read past the end of the file
     if (!fd->Public.IsDirectory) 
-        byteCount = min(byteCount, fd->Public.Size - fd->Public.Position);
+        byteCount = fmin(byteCount, fd->Public.Size - fd->Public.Position);
 
     while (byteCount > 0)
     {
         uint32_t leftInBuffer = SECTOR_SIZE - (fd->Public.Position % SECTOR_SIZE);
-        uint32_t take = min(byteCount, leftInBuffer);
+        uint32_t take = fmin(byteCount, leftInBuffer);
 
         memcpy(u8DataOut, fd->Buffer + fd->Public.Position % SECTOR_SIZE, take);
         u8DataOut += take;

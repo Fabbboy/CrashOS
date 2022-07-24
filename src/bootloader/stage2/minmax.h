@@ -1,4 +1,4 @@
 #pragma once
 
-#define min(a,b)    ((a) < (b) ? (a) : (b))
+#define fmin(a,b)    ((a) < (b) ? (a) : (b))
 #define max(a,b)    ((a) > (b) ? (a) : (b))

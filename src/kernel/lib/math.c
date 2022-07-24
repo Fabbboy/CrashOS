@@ -1,5 +1,4 @@
 #include "math.h"
-#include "limits.h"
 
 double sin(double x) {
     double t = x;
@@ -108,7 +107,11 @@ double erf(double x);
 double erfc(double x);
 double tgamma(double x);
 double lgamma(double x);
-double trunc(double x);
+
+double trunc(double x) {
+    return x < 0 ? ceil(x) : floor(x);
+}
+
 double round(double x);
 long int lround(double x);
 long long int llround(double x);
@@ -118,11 +121,38 @@ long long int llrint(double x);
 double nearbyint(double x);
 double remainder(double numer, double denom);
 double remquo(double numer, double denom, int* quot);
-double copysign(double x, double y);
-double nan(const char* tagp);
+
+double copysign(double x, double y) {
+    if(y >= 0) {
+        return x >= 0 ? x : -x;
+    } else {
+        return x < 0 ? x : -x;
+    }
+}
+
+double nan(const char* tagp) {
+    return __builtin_nan(tagp);
+}
+
 double nextafter(double x, double y);
 double nexttoward(double x, long double y);
-double fmax(double x, double y);
-double fmin(double x, double y);
-double fdim(double x, double y);
-double fma(double x, double y, double z);
+
+double fmax(double x, double y) {
+    if(isnan(x)) return y;
+    if(isnan(y)) return x;
+    return x > y ? x : y;
+}
+
+double fmin(double x, double y) {
+    if(isnan(x)) return y;
+    if(isnan(y)) return x;
+    return x < y ? x : y;
+}
+
+double fdim(double x, double y) {
+    return x > y ? x - y : 0;
+}
+
+double fma(double x, double y, double z) {
+    return x * y + z;
+}

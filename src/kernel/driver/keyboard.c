@@ -47,9 +47,9 @@ unsigned char kbdde[128] =
 
 void keyboard_handler(Registers* regs) {
     unsigned char scancode = inb(KEYBOARD_PORT);
-    bool uppercase = false;
+    int uppercase = 0;
     if(scancode & 0x80) {
-        uppercase = false;
+        uppercase = 0;
         //released
     } else {
         //pressed
@@ -67,7 +67,7 @@ void keyboard_handler(Registers* regs) {
                 break;
                 //shift
             case 0x2A:
-                uppercase = true;
+                uppercase = 1;
                 return;
                 break;
         }

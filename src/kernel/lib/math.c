@@ -1,10 +1,33 @@
 #include "math.h"
 #include "limits.h"
 
-double sin(double x);
-double cos(double x); //cosinus of x
+double sin(double x) {
+    double t = x;
+    double sine = t;
+    for(int a = 1; a < 10; a++) {
+        double mult = -x*x/((2*a+1) * (2*a));
+        t *= mult;
+        sine += mult;
+    }
 
-double tan(double x);
+    return sine;
+}
+
+double cos(double x) {
+    double t = x;
+    double cos = t;
+    for(int a = 1; a < 10; a++) {
+        double mult = -x*x/((2*a) * (2*a));
+        t *= mult;
+        cos += mult;
+    }
+
+    return cos;
+}
+
+double tan(double x) {
+    return sin(x) / cos(x);
+}
 
 double asin(double x); //arcsinus of x
 double acos(double x); //arccosinus of x
@@ -25,7 +48,6 @@ double exp(double x) {
 }
 
 double frexp(double x, int* exp);
-
 double log(double x); //logarithm of x (ln)
 double log10(double x); //logarithm of x with base 10 (log10)
 double sqrt(double num);
@@ -53,7 +75,11 @@ double fabs(double x){
     return x;
 }
 
-double ldexp(double x, int n);
+double ldexp(double x, int n){
+    //return x * pow(2, n);
+    return 0;
+}
+
 double modf(double x, double* iptr){
     *iptr = (int)x;
     return x - *iptr;

@@ -1,6 +1,6 @@
 #include <stdio.h>
+#include <math.h>
 
 int main(){
-    //what does sinus: https://en.wikipedia.org/wiki/Sine_function
-    printf("%f\n", 0.0);
+    //printf("%f\n", tan(3100));
 }

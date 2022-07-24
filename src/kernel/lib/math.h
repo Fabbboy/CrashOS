@@ -1,5 +1,20 @@
 #pragma once
 
+#define PI                  3.14159265358979323846
+#define PI_2                1.57079632679489661923
+#define PI_4                0.785398163397448309616
+#define E                   2.71828182845904523536
+#define LOG2E               1.44269504088896340736
+#define LOG10E              0.434294481903251827651
+#define LN2                 0.693147180559945309417
+#define LN10                2.30258509299404568402
+#define SQRT2               1.41421356237309504880
+#define SQRT1_2             0.707106781186547524401
+#define SQRT2_PI            1.12837916709551257390
+#define NAN                 __builtin_nan("")
+
+#define isnan(x)            (x != x)
+
 double sin(double x); //sinus of x
 double cos(double x); //cosinus of x
 double tan(double x); //tangens of x

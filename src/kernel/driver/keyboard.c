@@ -118,11 +118,6 @@ void keyboard_handler(Registers* regs) {
         if(c == 0) return;
 
         if(is_key_down(KEY_LSHIFT) || is_key_down(KEY_RSHIFT)) {
-            /*if(c <= 'z' && c >= 'a') {
-                c -= 'a' - 'A';
-            } else if(c <= '9' && c >= '0') {
-                c -= '1' - '!';
-            }*/
             c = kbdde_shift[scancode];
         }
 

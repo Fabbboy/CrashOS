@@ -2,6 +2,8 @@
 #include "../i686/irq.h"
 #include "../video/stdio.h"
 #include "../i686/io.h"
+#include <stdbool.h>
+
 
 unsigned char kbdde[128] =
         {
@@ -45,12 +47,12 @@ unsigned char kbdde[128] =
 
 void keyboard_handler(Registers* regs) {
     unsigned char scancode = inb(KEYBOARD_PORT);
-
+    bool uppercase = false;
     if(scancode & 0x80) {
+        uppercase = false;
         //released
     } else {
         //pressed
-
         //switch case for special keys
         switch(scancode){
             //arrow left
@@ -63,6 +65,11 @@ void keyboard_handler(Registers* regs) {
                 arrow_right();
                 return;
                 break;
+                //shift
+            case 0x2A:
+                uppercase = true;
+                return;
+                break;
         }
 
         if(scancode == 14) {
@@ -70,7 +77,7 @@ void keyboard_handler(Registers* regs) {
             return;
         }
 
-        putc(kbdde[scancode]);
+        putc(kbdde[scancode], uppercase);
     }
 }
 

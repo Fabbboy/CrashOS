@@ -1,6 +1,5 @@
 #include "stdio.h"
 #include "../i686/io.h"
-
 #include <stdarg.h>
 #include <stdbool.h>
 
@@ -79,7 +78,7 @@ void scrollback(int lines)
     g_ScreenY = SCREEN_HEIGHT - lines;
 }
 
-void putc(char c) // NOLINT(misc-no-recursion)
+void putc(char c, bool upper) // NOLINT(misc-no-recursion)
 {
     switch (c)
     {
@@ -104,8 +103,13 @@ void putc(char c) // NOLINT(misc-no-recursion)
             break;
 
         default:
-            put_chr(g_ScreenX, g_ScreenY, c);
-            g_ScreenX++;
+           /* put_chr(g_ScreenX, g_ScreenY, c);
+            g_ScreenX++;*/
+
+            if(upper)
+                put_chr(g_ScreenX, g_ScreenY, c);
+            else
+                put_chr(g_ScreenX, g_ScreenY, c + 32);
             break;
     }
 
@@ -400,9 +404,10 @@ __attribute__((unused)) void print_buffer(const char* msg, const void* buffer, u
 }
 
 void arrow_right(){
-    putc('\x1b');
-    putc('[');
-    putc('C');
+    if(g_ArrowRight == 0){
+        g_ScreenX++;
+        set_cursor(g_ScreenX, g_ScreenY);
+    }
 }
 
 void arrow_left(){

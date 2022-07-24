@@ -77,7 +77,7 @@ void keyboard_handler(Registers* regs) {
             return;
         }
 
-        putc(kbdde[scancode], uppercase);
+        putc(kbdde[scancode]);
     }
 }
 

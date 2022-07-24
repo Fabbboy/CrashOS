@@ -15,7 +15,7 @@ uint8_t get_color(int x, int y);
 void set_cursor(int x, int y);
 void set_last_char_cursor();
 void clear_screen();
-void putc(char c, int upper_case);
+void putc(char c);
 
 int last_chr_x(int line);
 

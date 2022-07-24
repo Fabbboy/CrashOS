@@ -3,8 +3,6 @@
 #include "../video/stdio.h"
 #include "../i686/io.h"
 
-
-
 unsigned char kbdde[128] =
         {
                 0,  27, '1', '2', '3', '4', '5', '6', '7', '8',	/* 9 */
@@ -45,12 +43,16 @@ unsigned char kbdde[128] =
                 0,	/* All other keys are undefined */
         };
 
+bool key_states[128];
+
 void keyboard_handler(Registers* regs) {
     unsigned char scancode = inb(KEYBOARD_PORT);
     if(scancode & 0x80) {
         //released
+        key_states[scancode - 0x80] = false;
     } else {
         //pressed
+        key_states[scancode] = true;
         //switch case for special keys
         switch(scancode){
             //arrow left
@@ -74,11 +76,29 @@ void keyboard_handler(Registers* regs) {
             return;
         }
 
-        putc(kbdde[scancode]);
+        unsigned char c = kbdde[scancode];
+
+        if(c == 0) return;
+
+        if(is_key_down(KEY_LSHIFT) || is_key_down(KEY_RSHIFT)) {
+            if(c <= 'z' && c >= 'a') {
+                c -= 'a' - 'A';
+            } else if(c <= '9' && c >= '0') {
+                c -= '1' - '!';
+            }
+        }
+
+        putc(c);
     }
 }
 
 void keyboard_install() {
     IRQ_RegisterHandler(1, keyboard_handler);
+    for(int i = 0; i < 128; i++)
+        key_states[i] = false;
     printf("Keyboard installed!\n");
+}
+
+bool is_key_down(KEY scancode) {
+    return key_states[scancode];
 }

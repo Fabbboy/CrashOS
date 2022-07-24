@@ -161,6 +161,7 @@ __attribute__((unused)) void rm_chrs(uint32_t amount)
         {
             g_ScreenY--;
 
+
             if(get_chr(g_ScreenX, g_ScreenY) == ' ')
                 g_ScreenX = last_chr_x(g_ScreenY);
             else

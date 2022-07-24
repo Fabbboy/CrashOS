@@ -86,13 +86,16 @@ void putc(char c) // NOLINT(misc-no-recursion)
     switch (c)
     {
         case '\n':
-            //check if line is empty if so return. if not, move to next line.
+            //if line is empty put a space to avoid a line break.
             if (g_ScreenX == 0)
-                return;
+            {
+                put_chr(g_ScreenX, g_ScreenY, ' ');
+                put_color(g_ScreenX, g_ScreenY, DEFAULT_COLOR);
+            }
             g_ScreenX = 0;
             g_ScreenY++;
             break;
-    
+
         case '\t':
             for (int i = 0; i < 4 - (g_ScreenX % 4); i++)
                 putc(' ');
@@ -157,13 +160,15 @@ __attribute__((unused)) void rm_chrs(uint32_t amount)
         if(g_ScreenX < 0)
         {
             g_ScreenY--;
-            g_ScreenX = last_chr_x(g_ScreenY) + 1;
+            if(get_chr(g_ScreenX, g_ScreenY) == ' ')
+                g_ScreenX = last_chr_x(g_ScreenY);
+            else
+                g_ScreenX = last_chr_x(g_ScreenY) + 1;
         }
 
         rm_chr(g_ScreenX, g_ScreenY);
         rm_color(g_ScreenX, g_ScreenY);
     }
-
     set_last_char_cursor();
 }
 
@@ -179,8 +184,10 @@ void rm_last_line()
     if(g_ScreenY == 0) return;
     rm_line(g_ScreenY);
     g_ScreenY--;
-    g_ScreenX = last_chr_x(g_ScreenY) + 1;
-
+    if(get_chr(g_ScreenX, g_ScreenY) == ' ')
+        g_ScreenX = last_chr_x(g_ScreenY);
+    else
+        g_ScreenX = last_chr_x(g_ScreenY) + 1;
     set_last_char_cursor();
 }
 
@@ -201,7 +208,7 @@ void printf_unsigned(unsigned long long number, int radix)
     int pos = 0;
 
     // convert number to ASCII
-    do 
+    do
     {
         unsigned long long rem = number % radix;
         number /= radix;
@@ -254,9 +261,9 @@ void printf(const char* fmt, ...)
                 switch (*fmt)
                 {
                     case '%':   state = PRINTF_STATE_LENGTH;
-                                break;
+                        break;
                     default:    putc(*fmt);
-                                break;
+                        break;
                 }
                 break;
 
@@ -264,11 +271,11 @@ void printf(const char* fmt, ...)
                 switch (*fmt)
                 {
                     case 'h':   length = PRINTF_LENGTH_SHORT;
-                                state = PRINTF_STATE_LENGTH_SHORT;
-                                break;
+                        state = PRINTF_STATE_LENGTH_SHORT;
+                        break;
                     case 'l':   length = PRINTF_LENGTH_LONG;
-                                state = PRINTF_STATE_LENGTH_LONG;
-                                break;
+                        state = PRINTF_STATE_LENGTH_LONG;
+                        break;
                     default:    goto PRINTF_STATE_SPEC_;
                 }
                 break;
@@ -296,31 +303,31 @@ void printf(const char* fmt, ...)
                 switch (*fmt)
                 {
                     case 'c':   putc((char)va_arg(args, int));
-                                break;
+                        break;
 
-                    case 's':   
-                                puts(va_arg(args, const char*));
-                                break;
+                    case 's':
+                        puts(va_arg(args, const char*));
+                        break;
 
                     case '%':   putc('%');
-                                break;
+                        break;
 
                     case 'd':
                     case 'i':   radix = 10; sign = true; number = true;
-                                break;
+                        break;
 
                     case 'u':   radix = 10; sign = false; number = true;
-                                break;
+                        break;
 
                     case 'X':
                     case 'x':
                     case 'p':   radix = 16; sign = false; number = true;
-                                break;
+                        break;
 
                     case 'o':   radix = 8; sign = false; number = true;
-                                break;
+                        break;
 
-                    // ignore invalid spec
+                        // ignore invalid spec
                     default:    break;
                 }
 
@@ -330,32 +337,32 @@ void printf(const char* fmt, ...)
                     {
                         switch (length) // NOLINT(hicpp-multiway-paths-covered)
                         {
-                        case PRINTF_LENGTH_SHORT_SHORT: // NOLINT(bugprone-branch-clone)
-                        case PRINTF_LENGTH_SHORT:
-                        case PRINTF_LENGTH_DEFAULT:     printf_signed(va_arg(args, int), radix);
-                                                        break;
+                            case PRINTF_LENGTH_SHORT_SHORT: // NOLINT(bugprone-branch-clone)
+                            case PRINTF_LENGTH_SHORT:
+                            case PRINTF_LENGTH_DEFAULT:     printf_signed(va_arg(args, int), radix);
+                                break;
 
-                        case PRINTF_LENGTH_LONG:        printf_signed(va_arg(args, long), radix);
-                                                        break;
+                            case PRINTF_LENGTH_LONG:        printf_signed(va_arg(args, long), radix);
+                                break;
 
-                        case PRINTF_LENGTH_LONG_LONG:   printf_signed(va_arg(args, long long), radix);
-                                                        break;
+                            case PRINTF_LENGTH_LONG_LONG:   printf_signed(va_arg(args, long long), radix);
+                                break;
                         }
                     }
                     else
                     {
                         switch (length) // NOLINT(hicpp-multiway-paths-covered)
                         {
-                        case PRINTF_LENGTH_SHORT_SHORT: // NOLINT(bugprone-branch-clone)
-                        case PRINTF_LENGTH_SHORT:
-                        case PRINTF_LENGTH_DEFAULT:     printf_unsigned(va_arg(args, unsigned int), radix);
-                                                        break;
-                                                        
-                        case PRINTF_LENGTH_LONG:        printf_unsigned(va_arg(args, unsigned  long), radix);
-                                                        break;
+                            case PRINTF_LENGTH_SHORT_SHORT: // NOLINT(bugprone-branch-clone)
+                            case PRINTF_LENGTH_SHORT:
+                            case PRINTF_LENGTH_DEFAULT:     printf_unsigned(va_arg(args, unsigned int), radix);
+                                break;
 
-                        case PRINTF_LENGTH_LONG_LONG:   printf_unsigned(va_arg(args, unsigned  long long), radix);
-                                                        break;
+                            case PRINTF_LENGTH_LONG:        printf_unsigned(va_arg(args, unsigned  long), radix);
+                                break;
+
+                            case PRINTF_LENGTH_LONG_LONG:   printf_unsigned(va_arg(args, unsigned  long long), radix);
+                                break;
                         }
                     }
                 }
@@ -382,7 +389,7 @@ void println() {
 __attribute__((unused)) void print_buffer(const char* msg, const void* buffer, uint32_t count)
 {
     const uint8_t* u8Buffer = (const uint8_t*)buffer;
-    
+
     puts(msg);
     for (uint32_t i = 0; i < count; i++)
     {

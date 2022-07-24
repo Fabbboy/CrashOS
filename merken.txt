@@ -1,15 +1,6 @@
-    for (int y = lines; y < SCREEN_HEIGHT; y++)
-        for (int x = 0; x < SCREEN_WIDTH; x++)
-        {
-            put_chr(x, y - lines, get_chr(x, y));
-            put_color(x, y - lines, get_color(x, y));
-        }
 
-    for (uint8_t y = SCREEN_HEIGHT - lines; y < SCREEN_HEIGHT; y++)
-        for (int x = 0; x < SCREEN_WIDTH; x++)
-        {
-            put_chr(x, y, '\0');
-            put_color(x, y, DEFAULT_COLOR);
-        }
-
-    g_ScreenY -= lines;
+            if(get_chr(0, g_ScreenY) == ' ')
+                g_ScreenX = last_chr_x(g_ScreenY);
+            else
+                g_ScreenX = SCREEN_WIDTH - 1;
+            g_ScreenX = last_chr_x(g_ScreenY) + 1;

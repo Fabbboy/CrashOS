@@ -1,7 +1,6 @@
 #pragma once
 #include <stdint.h>
 
-#define shiftIsClicked false
 //Define screenwidtrh
 #define SCREEN_WIDTH 80
 #define SCREEN_HEIGHT 25
@@ -13,7 +12,7 @@ uint8_t get_color(int x, int y);
 void set_cursor(int x, int y);
 void set_last_char_cursor();
 void clear_screen();
-void putc(char c);
+void putc(char c, bool upper_case);
 
 int last_chr_x(int line);
 

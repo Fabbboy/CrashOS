@@ -72,8 +72,18 @@ double log(double x) {
     return result;
 }
 
-double log10(double x); //logarithm of x with base 10 (log10)
-double sqrt(double num);
+double log10(double x) {
+    return log(x) / LN10;
+}
+
+double sqrt(double num) {
+    double z = 1.0;
+    for(int i = 1; i <= 10; i++) {
+        z -= (z*z - num) / (2*z);
+    }
+
+    return z;
+}
 
 double pow(double base, double exp) {
     return exp2(exp * log2(base));
@@ -134,9 +144,15 @@ double exp2(double x) {
     return ((1 << FP32_MANT_BITS) * (w + FP32_EXPO_BIAS + approx));
 }
 
-double expm1(double x);
+double expm1(double x) {
+    return exp(x) - 1;
+}
+
 int ilogb(double x);
-double log1p(double x);
+
+double log1p(double x) {
+    return log(1 + x);
+}
 
 double log2(double x) {
     return log(x) / LN2;
@@ -146,7 +162,11 @@ double logb(double x);
 double scalbn(double x, int n);
 double scalbln(double x, long int n);
 double cbrt(double x);
-double hypot(double x, double y);
+
+double hypot(double x, double y) {
+    return sqrt(x*x + y*y);
+}
+
 double erf(double x);
 double erfc(double x);
 double tgamma(double x);

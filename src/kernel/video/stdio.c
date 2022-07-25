@@ -260,7 +260,7 @@ void printf_signed(long long number, int radix)
     else printf_unsigned(number, radix);
 }
 
-void printf_double(double number, int afterpoint) {
+void printf_double(double number, int precision) {
     if(isnan(number)) {
         puts("NaN");
         return;
@@ -272,12 +272,12 @@ void printf_double(double number, int afterpoint) {
 
     printf_signed(ipart, 10);
 
-    if(afterpoint <= 0) return;
+    if(precision <= 0) return;
 
     int decimals = 0, int_part;
     putc('.');
 
-    while (decimals < afterpoint) {
+    while (decimals < precision) {
         dpart *= 10;
         int_part = (int) dpart;
         putc(g_HexChars[int_part % 10]);

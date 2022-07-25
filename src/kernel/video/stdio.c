@@ -2,6 +2,7 @@
 #include "../i686/io.h"
 #include <stdarg.h>
 #include <stdbool.h>
+#include "../lib/math.h"
 
 const uint8_t DEFAULT_COLOR = 0x7;
 
@@ -228,6 +229,11 @@ const char g_HexChars[] = "0123456789abcdef";
 
 void printf_unsigned(unsigned long long number, int radix)
 {
+    if (isnan(number)) {
+        puts("NaN");
+        return;
+    }
+
     char buffer[32];
     int pos = 0;
 
@@ -252,6 +258,34 @@ void printf_signed(long long number, int radix)
         printf_unsigned(-number, radix);
     }
     else printf_unsigned(number, radix);
+}
+
+void printf_double(double number, int afterpoint) {
+    if(isnan(number)) {
+        puts("NaN");
+        return;
+    }
+
+    int ipart = (int) number;
+
+    double dpart = number - (double) ipart;
+
+    printf_signed(ipart, 10);
+
+    if(afterpoint <= 0) return;
+
+    int decimals = 0, int_part;
+    putc('.');
+
+    while (decimals < afterpoint) {
+        dpart *= 10;
+        int_part = (int) dpart;
+        putc(g_HexChars[int_part % 10]);
+        decimals++;
+        dpart -= int_part;
+    }
+
+    //https://www.geeksforgeeks.org/convert-floating-point-number-string/
 }
 
 #define PRINTF_STATE_NORMAL         0
@@ -336,6 +370,10 @@ void printf(const char* fmt, ...)
                     case '%':   putc('%');
                         break;
 
+                    case 'f':
+                        printf_double(va_arg(args, double), 5);
+                        break;
+
                     case 'd':
                     case 'i':   radix = 10; sign = true; number = true;
                         break;
@@ -346,13 +384,19 @@ void printf(const char* fmt, ...)
                     case 'X':
                     case 'x':
                     case 'p':   radix = 16; sign = false; number = true;
+                        puts("0x");
                         break;
 
                     case 'o':   radix = 8; sign = false; number = true;
                         break;
 
-                        // ignore invalid spec
-                    default:    break;
+                    case 'b':   radix = 2; sign = false; number = true;
+                        break;
+
+                    default:
+                        putc('%');
+                        putc(*fmt);
+                        break;
                 }
 
                 if (number)

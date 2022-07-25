@@ -47,10 +47,37 @@ double exp(double x) {
 }
 
 double frexp(double x, int* exp);
-double log(double x); //logarithm of x (ln)
+
+double log(double x) {
+    double result = 0.0, term = x - 1;
+    double denominator = 2;
+    int power_of_one = -1;
+    double temp = term;
+
+    while (temp > 1e-15 || -temp > 1e-15) {
+        if(temp > 1e-15) {
+            result -= temp;
+        } else {
+            result += temp;
+        }
+
+        term *= (x - 1);
+        temp *= power_of_one;
+        temp /= denominator;
+        power_of_one *= -1;
+        denominator += 1;
+    }
+
+    result += term;
+    return result;
+}
+
 double log10(double x); //logarithm of x with base 10 (log10)
 double sqrt(double num);
-double pow(double base, double exp);
+
+double pow(double base, double exp) {
+    return exp2(exp * log2(base));
+}
 
 double ceil(double x){
     if (x == 0)
@@ -93,11 +120,28 @@ double fmod(double x, double y){
 double acosh(double x);
 double asinh(double x);
 double atanh(double x);
-double exp2(double x);
+
+// https://stackoverflow.com/questions/65554112/fast-double-exp2-function-in-c
+double exp2(double x) {
+    const int FP32_MIN_EXPO = -126;
+    const int FP32_MANT_BITS = 23;
+    const int FP32_EXPO_BIAS = 127;
+
+    x = (x < FP32_MIN_EXPO) ? FP32_MIN_EXPO : x;
+    double w = floor(x);
+    double z = x - w;
+    double approx = -0x1.6e7592p+2f + 0x1.bba764p+4f / (0x1.35ed00p+2f - z) - 0x1.f5e546p-2f * z;
+    return ((1 << FP32_MANT_BITS) * (w + FP32_EXPO_BIAS + approx));
+}
+
 double expm1(double x);
 int ilogb(double x);
 double log1p(double x);
-double log2(double x);
+
+double log2(double x) {
+    return log(x) / LN2;
+}
+
 double logb(double x);
 double scalbn(double x, int n);
 double scalbln(double x, long int n);

@@ -176,7 +176,10 @@ double trunc(double x) {
     return x < 0 ? ceil(x) : floor(x);
 }
 
-double round(double x);
+double round(double x) {
+    return signbit(x) ? ceil(x - 0.5) : floor(x - 0.5);
+}
+
 long int lround(double x);
 long long int llround(double x);
 double rint(double x);

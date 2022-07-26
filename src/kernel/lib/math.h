@@ -14,6 +14,7 @@
 #define NAN                 __builtin_nan("")
 
 #define isnan(x)            (x != x)
+#define signbit(x)          (x < 0)
 
 double sin(double x); //sinus of x
 double cos(double x); //cosinus of x

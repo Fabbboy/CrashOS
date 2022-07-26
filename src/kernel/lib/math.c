@@ -1,4 +1,5 @@
 #include "math.h"
+#include "memory.h"
 
 double sin(double x) {
     double t = x;
@@ -49,27 +50,15 @@ double exp(double x) {
 double frexp(double x, int* exp);
 
 double log(double x) {
-    double result = 0.0, term = x - 1;
-    double denominator = 2;
-    int power_of_one = -1;
-    double temp = term;
+    double alpha = (x - 1) / (x + 1), ans = alpha;
+    double save = ans * alpha * alpha;
 
-    while (temp > 1e-15 || -temp > 1e-15) {
-        if(temp > 1e-15) {
-            result -= temp;
-        } else {
-            result += temp;
-        }
-
-        term *= (x - 1);
-        temp *= power_of_one;
-        temp /= denominator;
-        power_of_one *= -1;
-        denominator += 1;
+    for(int i = 2; i <= 100; i++) {
+        ans += (1.0/(2 * i - 1)) * save;
+        save = save * alpha * alpha;
     }
 
-    result += term;
-    return result;
+    return 2.0 * ans;
 }
 
 double log10(double x) {
@@ -132,15 +121,18 @@ double atanh(double x);
 
 // https://stackoverflow.com/questions/65554112/fast-double-exp2-function-in-c
 double exp2(double x) {
-    const int FP32_MIN_EXPO = -126;
-    const int FP32_MANT_BITS = 23;
-    const int FP32_EXPO_BIAS = 127;
+    const int FP64_MIN_EXPO = -1022;
+    const int FP64_MANT_BITS = 52;
+    const int FP64_EXPO_BIAS = 1023;
 
-    x = (x < FP32_MIN_EXPO) ? FP32_MIN_EXPO : x;
+    x = (x < FP64_MIN_EXPO) ? FP64_MIN_EXPO : x;
     double w = floor(x);
     double z = x - w;
-    double approx = -0x1.6e7592p+2f + 0x1.bba764p+4f / (0x1.35ed00p+2f - z) - 0x1.f5e546p-2f * z;
-    return ((1 << FP32_MANT_BITS) * (w + FP32_EXPO_BIAS + approx));
+    double approx = -0x1.6e75d58p+2 + 0x1.bba7414p+4 / (0x1.35eccbap+2 - z) - 0x1.f5e53c2p-2 * z;
+    int64_t resi = ((1LL << FP64_MANT_BITS) * (w + FP64_EXPO_BIAS + approx));
+    double res;
+    memcpy(&res, &resi, sizeof res);
+    return res;
 }
 
 double expm1(double x) {

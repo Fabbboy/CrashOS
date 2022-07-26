@@ -4,7 +4,6 @@
 #include "hal/hal.h"
 #include "driver/pit.h"
 #include "driver/keyboard.h"
-#include "lib/math.h"
 
 extern uint8_t __bss_start;
 extern uint8_t __end;

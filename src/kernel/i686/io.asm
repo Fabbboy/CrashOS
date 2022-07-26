@@ -6,12 +6,44 @@ outb:
     out dx, al
     ret
 
+global outw
+outw:
+    [bits 32]
+    mov dx, [esp + 4]
+    mov ax, [esp + 8]
+    out dx, ax
+    ret
+
+global outl
+outl:
+    [bits 32]
+    mov dx, [esp + 4]
+    mov eax, [esp + 8]
+    out dx, eax
+    ret
+
 global inb
 inb:
     [bits 32]
     mov dx, [esp + 4]
     xor eax, eax
     in al, dx
+    ret
+
+global inw
+inw:
+    [bits 32]
+    mov dx, [esp + 4]
+    xor eax, eax
+    in ax, dx
+    ret
+
+global inl
+inl:
+    [bits 32]
+    mov dx, [esp + 4]
+    xor eax, eax
+    in eax, dx
     ret
 
 global i686_Panic

@@ -470,10 +470,12 @@ __attribute__((unused)) void print_buffer(const char* msg, const void* buffer, u
 
 void arrow_right(){
     if(g_ScreenX < SCREEN_WIDTH - 1){
-        g_ScreenX++;
-        set_cursor(g_ScreenX, g_ScreenY);
+        if(g_ScreenX < getLength(g_ScreenY)) {
+            g_ScreenX++;
+            set_cursor(g_ScreenX, g_ScreenY);
+        }
     }else{
-        g_ScreenX = 0;
+        g_ScreenX = getLength(g_ScreenY + 1);
         g_ScreenY++;
         set_cursor(g_ScreenX, g_ScreenY);
         isHappening == 1;
@@ -486,9 +488,17 @@ void arrow_left(){
         set_cursor(g_ScreenX, g_ScreenY);
         isHappening = 1;
     }else{
-        g_ScreenX = SCREEN_WIDTH - 1;
-        g_ScreenY--;
-        set_cursor(g_ScreenX, g_ScreenY);
-        isHappening = 1;
+        //check if we're moving to line -1
+        if(g_ScreenY > 0) {
+            g_ScreenY--;
+            g_ScreenX = getLength(g_ScreenY);
+            set_cursor(g_ScreenX, g_ScreenY);
+            isHappening = 1;
+        }else{
+            g_ScreenX = 0;
+            g_ScreenY = 0;
+            set_cursor(g_ScreenX, g_ScreenY);
+            isHappening = 0;
+        }
     }
 };

@@ -162,12 +162,13 @@ void rm_last_char() {
         g_ScreenX--;
         set_last_char_cursor();
     }else {
-        //check if line includes content. If yes, move one line up but nothing else. If no remove the line.
         if(getLength(g_ScreenY) > 0) {
-           //move one line up.
-              g_ScreenY--;
-              //set cursor to last char of the line.
-                g_ScreenX = last_chr_x(g_ScreenY);
+                g_ScreenY--;
+                if(get_chr(0, g_ScreenY) == ' ') {
+                    g_ScreenX = getLength(g_ScreenY) - 1;
+                }else {
+                    g_ScreenX = getLength(g_ScreenY);
+                }
                 set_last_char_cursor();
         }else {
             rm_last_line();

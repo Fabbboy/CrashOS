@@ -32,4 +32,3 @@ int memcmp(const void* ptr1, const void* ptr2, uint16_t num)
 
     return 0;
 }
-

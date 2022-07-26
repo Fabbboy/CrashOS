@@ -5,7 +5,6 @@
 #include "../lib/math.h"
 
 const uint8_t DEFAULT_COLOR = 0x7;
-
 int isHappening = 0;
 
 uint8_t* g_ScreenBuffer = (uint8_t*)0xB8000;
@@ -40,7 +39,6 @@ int getLength(int line) {
     }
     return length;
 };
-
 void set_cursor(int x, int y)
 {
     uint16_t pos = y * SCREEN_WIDTH + x;
@@ -117,12 +115,10 @@ void putc(char c) // NOLINT(misc-no-recursion)
             break;
 
         default:
-            /* put_chr(g_ScreenX, g_ScreenY, c);
-             g_ScreenX++;*/
-
             isHappening = 1;
             put_chr(g_ScreenX, g_ScreenY, c);
             g_ScreenX++;
+            //add char to lines array.
     }
 
     if (g_ScreenX >= SCREEN_WIDTH)
@@ -185,7 +181,6 @@ __attribute__((unused)) void rm_chrs(uint32_t amount)
         {
             g_ScreenY--;
 
-
             if(get_chr(g_ScreenX, g_ScreenY) == ' ')
                 g_ScreenX = last_chr_x(g_ScreenY);
             else
@@ -210,6 +205,7 @@ void rm_last_line()
     if(g_ScreenY == 0) return;
     rm_line(g_ScreenY);
     g_ScreenY--;
+
     if(get_chr(g_ScreenX, g_ScreenY) == ' ')
         g_ScreenX = last_chr_x(g_ScreenY);
     else
@@ -272,6 +268,7 @@ void printf_double(double number, int precision) {
     printf_signed(ipart, 10);
 
     if(precision <= 0) return;
+
 
     double dpart = number - (double) ipart;
 

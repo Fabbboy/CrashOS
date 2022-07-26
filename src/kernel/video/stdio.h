@@ -34,5 +34,4 @@ void arrow_right();
 void arrow_left();
 
 
-
 __attribute__((unused)) void print_buffer(const char* msg, const void* buffer, uint32_t count);

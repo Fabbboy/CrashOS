@@ -115,7 +115,6 @@ double ldexp(double x, int n){
     //return x * pow(2, n);
     return 0;
 }
-
 double modf(double x, double* iptr){
     *iptr = (int)x;
     return x - *iptr;

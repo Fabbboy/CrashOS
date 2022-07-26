@@ -11,9 +11,11 @@ typedef struct {
     unsigned char month;
     unsigned int year;
     unsigned char century;
-} Date;
+} time_t;
 
 void CMOS_read(unsigned char array[]);
 void CMOS_write(unsigned char array[]);
-void read_rtc();
-Date get_current_date();
+time_t get_current_date();
+void print_time(time_t time);
+void print_current_time();
+void rtc_install();

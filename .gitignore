@@ -1,3 +1,5 @@
 build/
 toolchain/
 *.err
+include_dir/kernel.bin
+include_dir/stage2.bin

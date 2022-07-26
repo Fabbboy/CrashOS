@@ -9,17 +9,17 @@ include build_scripts/toolchain.mk
 #
 # Floppy image
 #
+INCLUDE_DIRS=$(filter-out include_dir, $(shell find include_dir -type d))
+INCLUDE_FILES=$(shell find include_dir -type f)
+
 floppy_image: $(BUILD_DIR)/main_floppy.img
 
 $(BUILD_DIR)/main_floppy.img: bootloader kernel
 	dd if=/dev/zero of=$(BUILD_DIR)/main_floppy.img bs=512 count=2880
 	mkfs.fat -F 12 -n "NBOS" $(BUILD_DIR)/main_floppy.img
 	dd if=$(BUILD_DIR)/stage1.bin of=$(BUILD_DIR)/main_floppy.img conv=notrunc
-	mcopy -i $(BUILD_DIR)/main_floppy.img $(BUILD_DIR)/stage2.bin "::stage2.bin"
-	mcopy -i $(BUILD_DIR)/main_floppy.img $(BUILD_DIR)/kernel.bin "::kernel.bin"
-	mcopy -i $(BUILD_DIR)/main_floppy.img links.txt "::links.txt"
-	mmd -i $(BUILD_DIR)/main_floppy.img "::mydir"
-	mcopy -i $(BUILD_DIR)/main_floppy.img test.txt "::mydir/test.txt"
+	$(foreach DIR, $(INCLUDE_DIRS), mmd -i $(BUILD_DIR)/main_floppy.img "::$(DIR:include_dir/%=%)";)
+	$(foreach FILE, $(INCLUDE_FILES), mcopy -i $(BUILD_DIR)/main_floppy.img $(FILE) "::$(FILE:include_dir/%=%)";)
 
 #
 # Bootloader
@@ -35,6 +35,7 @@ stage2: $(BUILD_DIR)/stage2.bin
 
 $(BUILD_DIR)/stage2.bin: always
 	$(MAKE) -C src/bootloader/stage2 BUILD_DIR=$(abspath $(BUILD_DIR))
+	cp $(BUILD_DIR)/stage2.bin $(INCLUDE_DIR)/stage2.bin
 
 #
 # Kernel
@@ -43,6 +44,7 @@ kernel: $(BUILD_DIR)/kernel.bin
 
 $(BUILD_DIR)/kernel.bin: always
 	$(MAKE) -C src/kernel BUILD_DIR=$(abspath $(BUILD_DIR))
+	cp $(BUILD_DIR)/kernel.bin $(INCLUDE_DIR)/kernel.bin
 
 #
 # Tools

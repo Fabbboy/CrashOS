@@ -269,11 +269,11 @@ void printf_double(double number, int precision) {
 
     int ipart = (int) number;
 
-    double dpart = number - (double) ipart;
-
     printf_signed(ipart, 10);
 
     if(precision <= 0) return;
+
+    double dpart = number - (double) ipart;
 
     int decimals = 0, int_part;
     putc('.');

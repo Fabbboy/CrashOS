@@ -139,7 +139,6 @@ void rtc_handler(Registers* registers) {
 }
 
 void rtc_install() {
-    rtc_read();
     unsigned char status;
 
     status = read_RTC_register(0x0B);
@@ -151,6 +150,8 @@ void rtc_install() {
     write_RTC_register(0x0B, status);
 
     read_RTC_register(0x0C);
+
+    rtc_read();
 
     IRQ_RegisterHandler(8, rtc_handler);
     printf("RTC installed!\n");

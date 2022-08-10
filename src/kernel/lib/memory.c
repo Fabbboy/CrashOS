@@ -32,3 +32,21 @@ int memcmp(const void* ptr1, const void* ptr2, uint16_t num)
 
     return 0;
 }
+
+uint32_t page_directory[1024] __attribute__((aligned(4096)));
+uint32_t first_page_table[1024] __attribute__((aligned(4096)));
+
+void paging_init() {
+    for(int i = 0; i < 1024; i++) {
+        page_directory[i] = 0x00000002;
+    }
+
+    for(int i = 0; i < 1024; i++) {
+        first_page_table[i] = (i * 0x1000) | 3;
+    }
+
+    page_directory[0] = ((unsigned int) first_page_table) | 3;
+
+    loadPageDirectory(page_directory);
+    enablePaging();
+}

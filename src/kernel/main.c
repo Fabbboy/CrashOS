@@ -21,6 +21,7 @@ __attribute__((unused)) _Noreturn void __attribute__((section(".entry"))) start(
     pit_install();
     keyboard_install();
     rtc_install();
+    paging_init();
 
     print_current_time();
 

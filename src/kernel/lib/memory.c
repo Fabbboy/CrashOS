@@ -1,4 +1,8 @@
 #include "memory.h"
+#include "../video/stdio.h"
+
+//get &__end from linker script
+extern uint8_t __end;
 
 void* memcpy(void* dst, const void* src, uint16_t num)
 {
@@ -50,3 +54,26 @@ void paging_init() {
     loadPageDirectory(page_directory);
     enablePaging();
 }
+void mapMemory(){
+    for(int i = 0; i < 1024; i++){
+        if(first_page_table[i] != 0){
+            printf("%d: %x\n", i, first_page_table[i]);
+        }
+    }
+};
+
+
+void* malloc(uint32_t size){
+    void* mem = (void*)&__end;
+    for(int i = 0; i < size; i++){
+        memcpy(mem + i, mem, 1);
+    }
+    return mem;
+};
+void free(void* ptr){
+    for(int i = 0; i < 1024; i++){
+        if(first_page_table[i] == (unsigned int)ptr){
+            first_page_table[i] = 0;
+        }
+    }
+};

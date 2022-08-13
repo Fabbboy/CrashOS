@@ -8,3 +8,7 @@ int memcmp(const void* ptr1, const void* ptr2, uint16_t num);
 void paging_init();
 void __attribute__((cdecl)) loadPageDirectory(unsigned int*);
 void __attribute__((cdecl)) enablePaging();
+
+void* malloc(uint32_t size);
+void free(void* ptr);
+void mapMemory();

@@ -9,6 +9,8 @@
 extern uint8_t __bss_start;
 extern uint8_t __end;
 
+
+
 __attribute__((unused)) _Noreturn void __attribute__((section(".entry"))) start(uint16_t bootDrive)
 {
     memset(&__bss_start, 0, (&__end) - (&__bss_start));
@@ -23,7 +25,11 @@ __attribute__((unused)) _Noreturn void __attribute__((section(".entry"))) start(
     rtc_install();
     paging_init();
 
+    printf("%x\n", malloc(100));
+
     print_current_time();
 
     for (;;);
 }
+//0x10900
+//

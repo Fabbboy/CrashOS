@@ -7,21 +7,27 @@ The Repo is private on his Profile
 
 
 ## Usage
-1) Build the Floppy:
+<h2>1) Build the Floppy:</h2>
+
 You need either a [Docker container](https://github.com/Fabbboy/CrashOS/blob/master/DockerEnv/Dockerfile) or run it on a Linux operating system
 After run:
 ```
 sh setup.sh
 ```
-2) Connect to Docker container and/or run following commands in Linux terminal:
+<h2>2) Connect to Docker container and/or run following commands in Linux terminal:</h2>
+
 **(IMPORTANT: You should be in the root of the project /CrashOs/)**
 ```
 sh run.sh
 ```
 This should build the Floppy into /CrashOS/build/
-3) Run the Floppy using QEMU:
-(If you're using a Docker container you have to run the QEMU command outside of the Container)
-(The build dir is located in the root folder: /CrashOS/build/)
+
+<h2>3) Run the Floppy using QEMU:</h2>
+
+This step is only needed if you are using Docker. Otherwise this step is automatically executed in "run.sh".
+
+**!!IMPORTANT: You have to execute this command outside of the Container in your normal terminal!!**
+
 ```
 qemu-system-i386 -fda build/main_floppy.img
 ```

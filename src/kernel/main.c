@@ -25,7 +25,14 @@ __attribute__((unused)) _Noreturn void __attribute__((section(".entry"))) start(
     rtc_install();
     paging_init();
 
-    printf("%x\n", malloc(100));
+   //define array with malloc()
+    int* array = malloc(sizeof(int) * 0);
+    for(int i = 0; i < 10; i++){
+        array[i] = i;
+    }
+    for(int i = 0; i < 10; i++){
+        printf("%d\n", array[i]);
+    }
 
     print_current_time();
 

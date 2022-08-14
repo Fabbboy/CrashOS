@@ -63,12 +63,18 @@ void mapMemory(){
 };
 
 
-void* malloc(uint32_t size){
-    void* mem = (void*)&__end;
-    for(int i = 0; i < size; i++){
-        memcpy(mem + i, mem, 1);
+void* malloc(uint32_t size) {
+    if (size <= 0){
+        printf("malloc: size is 0\n");
+    //stop the function withozt returning
+    }else {
+
+        void *mem = (void *) &__end;
+        for (int i = 0; i < size; i++) {
+            memcpy(mem + i, mem, 1);
+        }
+        return mem;
     }
-    return mem;
 };
 void free(void* ptr){
     for(int i = 0; i < 1024; i++){
@@ -77,3 +83,4 @@ void free(void* ptr){
         }
     }
 };
+

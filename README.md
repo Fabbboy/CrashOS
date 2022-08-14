@@ -9,6 +9,8 @@ The Repo is private on his Profile
 ## Usage
 <h2>1) Build the Floppy:</h2>
 
+This step is only needed if you're building the project the first time
+
 You need either a [Docker container](https://github.com/Fabbboy/CrashOS/blob/master/DockerEnv/Dockerfile) or run it on a Linux operating system
 After run:
 ```

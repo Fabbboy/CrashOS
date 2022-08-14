@@ -66,7 +66,7 @@ void mapMemory(){
 void* malloc(uint32_t size) {
     if (size <= 0){
         printf("malloc: size is 0\n");
-    //stop the function withozt returning
+
     }else {
 
         void *mem = (void *) &__end;

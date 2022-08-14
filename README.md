@@ -1,35 +1,49 @@
-# CrashOS
+# <h1>CrashOS</h1>
+<tt>Made by Crashcrafter and Fabboy</tt>
+<hr></hr>
 
 ## Informations
 A OS created in C and Assembly with [Crashcrafter](https://github.com/Crashcrafter)
 
 The Repo is private on his Profile
 
+## Setup
+<h3>1) Download the project</h3>
+This step is self-explanatory
+<h3>2) Setup the Machine</h3>
+
+**You need Linux**
+
+**DOCKER**:
+ 1. Setup the Container:
+ (The [Dockerfile](https://github.com/Fabbboy/CrashOS/blob/master/DockerEnv/Dockerfile) is located at: CrashOS/DockerEnv/)
+ To Setup the Container run:
+ ```
+ docker build ./DockerEnv -t os-buildenv
+ ```
+ 2. Connect to machine
+ 3. Run ````setup.sh```` file
+
+**LINUX**:
+Just run the ````setup.sh```` file
+
 
 ## Usage
-<h2>1) Build the Floppy:</h2>
 
-This step is only needed if you're building the project the first time
-
-You need either a [Docker container](https://github.com/Fabbboy/CrashOS/blob/master/DockerEnv/Dockerfile) or run it on a Linux operating system
-After run:
-```
-sh setup.sh
-```
-<h2>2) Connect to Docker container and/or run following commands in Linux terminal:</h2>
-
-**(IMPORTANT: You should be in the root of the project /CrashOs/)**
-```
-sh run.sh
-```
-This should build the Floppy into /CrashOS/build/
-
-<h2>3) Run the Floppy using QEMU:</h2>
-
-This step is only needed if you are using Docker. Otherwise this step is automatically executed in "run.sh".
-
-**!!IMPORTANT: You have to execute this command outside of the Container in your normal terminal!!**
-
-```
-qemu-system-i386 -fda build/main_floppy.img
-```
+**DOCKER**:
+ 1.  Connect to machine. 
+ ````
+ #I'm using this on Mac this could be diffrent depending on the OS.
+ docker run --rm -it -v "${pwd}:/root/env" os-buildenv
+ ````
+ 3.  Run the ````run.sh```` file
+ 4.  Exit machine
+ 5.  Run:
+ ````
+ qemu-system-i386 -fda build/main_floppy.img
+ ````
+ 
+ **LINUX**:
+ Run the ````run.sh```` file
+ 
+ 
